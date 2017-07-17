@@ -1,12 +1,12 @@
 {
-  "name": "Arpeggiator",
+  "name": "Flamenco Guitar Licks",
   "description": "",
   "main": "index.js",
   "authors": [
     "Gus Escola <camagrock@gmail.com>"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/gusblacknails/Arpeggiator",
+  "homepage": "",
   "ignore": [
     "**/.*",
     "node_modules",
