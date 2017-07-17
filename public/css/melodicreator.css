@@ -1,0 +1,93 @@
+html {
+  font-size: 10px;
+  /*background: bottom center;
+  background-size: cover;*/
+}
+body,html {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+.arpegioSelector{
+   display: flex;
+   flex-direction: column;
+   width: 90%;
+}
+.melodyBox {
+    width: 88.5%;
+    height: 200px;
+}
+.arpegioInfo{
+  display: flex;
+  flex-direction: column;
+  width: 11%;
+  height: 0px;
+  padding-left: 1px;
+}
+.arpegioBox {
+    width: 88.5%;
+    height: 20%;
+}
+.melodyDiv {
+    display: flex;
+    border-style: solid;
+    border-radius: 6px;
+    color: #999999;
+    flex-direction: row;
+    width: 400px;
+    border-width: 2px;
+    background: #fff;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+}
+.selection{text-align: center;}
+.selectionArpegio{
+  width: 20%;
+}
+
+.notesInfo{display: flex;
+flex-direction: column; 
+width: 11%;
+padding-top: 4px;}
+.keys {
+  display: flex;
+  /*flex: 1;*/
+  /*min-height: 100vh;*/
+  align-items: center;
+  justify-content: center;
+
+}
+
+.key {
+  border-radius: 3px;
+  margin: 2.5px;
+  font-size: 1.5rem;
+  padding: 1.18rem .5rem;
+  width: 33px;
+  height: 23px;
+  text-align: center;
+  color: white;
+  background: rgba(0,0,0,0.4);
+  text-shadow: 0 0 .5rem black;
+  padding-top: 2px;
+}
+.arpegioRepeatsBox {
+    border-radius: 3px;
+    margin: 1.5px;
+    font-size: 1.5rem;
+    padding: 1.18rem .5rem;
+    width: 33px;
+    height: 22px;
+    text-align: center;
+    color: white;
+    background: rgba(0,0,0,0.4);
+    text-shadow: 0 0 0.5rem black;
+    padding-top: 2px;
+}
+
+.sound {
+ font-size: 12.2px;
+  /*text-transform: uppercase;*/
+  letter-spacing: .1rem;
+  color: #ffc600;
+}
