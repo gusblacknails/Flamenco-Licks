@@ -30,7 +30,8 @@
     "mongoose": "^4.10.4",
     "pug": "^2.0.0-rc.1",
     "session-file-store": "^1.0.0",
-    "tonal": "^0.69.6"
+    "tonal": "^0.69.6",
+    "vexflow": "^1.2.83"
   },
   "devDependencies": {
     "dotenv": "^4.0.0"
