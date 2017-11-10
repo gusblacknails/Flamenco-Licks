@@ -110,6 +110,14 @@ var thirdString = 0
 var secondString = 0
 var firstString = 0
 
+
+
+
+
+
+
+//al empezar el transport se acciona currentPicado
+
 function drawnote(event, last) {
     var currentEvent = event.name
     var lastEvent = last
@@ -253,6 +261,7 @@ function drawnote(event, last) {
 var lastEvent = null
 
 function playNote(time, event) {
+    console.log(event)
     synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
     drawnote(event, lastEvent)
     lastEvent = event.name
@@ -260,6 +269,8 @@ function playNote(time, event) {
 //acciona el midi con el boton "play" y empieza el transport
 var button = document.getElementById("play");
 button.addEventListener("click ", function() {
+
+
     if (Tone.Transport.state === "started ") {
         Tone.Transport.stop();
 
@@ -268,11 +279,34 @@ button.addEventListener("click ", function() {
 
     }
 });
-//al empezar el transport se acciona currentPicado
-MidiConvert.load("Buleria_Aflaco.mid ").then(function(midi) {
 
-    console.log(midi)
-    var melody = midi.get("Inst 1").notes;
+
+
+function currentSong(){
+    var currentMidi= ["buleria_Aflaco.mid","Picado_Tango_A_F.mid"];
+    var selects = document.getElementById("currentMidi");
+    var selectedValue = selects.options[selects.selectedIndex].value;
+    MidiConvert.load("midis/" + currentMidi[selectedValue]).then(function(midi) {
+
+        console.log(midi.tracks[0].name)
+        var melody = midi.get(midi.tracks[0].name).notes;
+        console.log(melody)
+        // make sure you set the tempo before you schedule the events
+        Tone.Transport.bpm.value = midi.bpm;
+        Tone.Transport.timeSignature = midi.timeSignature;
+        var currentPicado = new Tone.Part(playNote, melody).start(0);
+
+    });
+
+    console.log(currentMidi[selectedValue])
+}
+
+
+MidiConvert.load("midis/buleria_Aflaco.mid").then(function(midi) {
+
+    console.log(midi.tracks[0].name)
+    var melody = midi.get(midi.tracks[0].name).notes;
+    console.log(melody)
     // make sure you set the tempo before you schedule the events
     Tone.Transport.bpm.value = midi.bpm;
     Tone.Transport.timeSignature = midi.timeSignature;

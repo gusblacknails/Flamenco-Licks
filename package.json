@@ -1,5 +1,5 @@
 {
-  "name": "Flamenco Guitar Licks",
+  "name": "",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -31,7 +31,8 @@
     "pug": "^2.0.0-rc.1",
     "session-file-store": "^1.0.0",
     "tonal": "^0.69.6",
-    "vexflow": "^1.2.83"
+    "vexflow": "^1.2.83",
+    "vexflow-musicxml": "file:vexflow-musicxml"
   },
   "devDependencies": {
     "dotenv": "^4.0.0"

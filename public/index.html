@@ -1,21 +1,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+
 <html>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Flamenco Guitar Licks</title>
     
-    <script src="/js/libs/tonal.min.js"></script>
+    <!--<script src="/js/libs/tonal.min.js"></script>-->
     <script src="/js/libs/Tone.min.js"></script>
     <script src="/js/libs/jquery.min.js"></script>
-    <script src="/js/libs/nexusUI.min.js"></script>
-    <script src="/js/libs/vexflow-min.js"></script>   
+    <script src="/js/libs/vexflow-min.js"></script>
+    <script src="/js/libs/MidiConvert.js"></script>
 
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
-    <!--    <link rel="stylesheet" href="/css/crossfader.css"> -->
+    <!--<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">-->
     <link rel="stylesheet" href="/css/multiDrum.css">
-    <!--  <link rel="stylesheet" href="/css/melodicreator.css"> -->
+   
 </head>
 
 <body>
@@ -32,209 +31,217 @@
                     <span id="titleBPM">BPM:</span><span id="bpm">120</span></div>
                 <input type="range" id="tempo__range" min="50" max="190" step="1" value="120">
             </div>
+            <select id="currentMidi" onchange="currentSong()">
+                <option value="0">Bulería</option>
+                <option value="1">Bumblebee</option>
+                <option value="2">Sorpresa</option>
 
+            </select>
         </div>
 
+<div id="container-id"></div>
 
-<div id="boo"></div>
+
+        <div id="boo"></div>
 <table id="Tabla_01" width="1025" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td rowspan="2">
-            <img id="1_0" src="images/1_0.png" width="100" height="51" alt="1_0" /></td>
+            <img id="1_0" src="images/normal/1_0.png" width="100" height="51" alt="1_0" /></td>
         <td rowspan="2">
-            <img id="1_1" src="images/1_1.png" width="108" height="51" alt="1_1" /></td>
+            <img id="1_1" src="images/normal/1_1.png" width="108" height="51" alt="1_1" /></td>
         <td rowspan="2">
-            <img id="1_2" src="images/1_2.png" width="98" height="51" alt="1_2" /></td>
+            <img id="1_2" src="images/normal/1_2.png" width="98" height="51" alt="1_2" /></td>
         <td>
-            <img id="1_3" src="images/1_3.png" width="93" height="50" alt="1_3" /></td>
+            <img id="1_3" src="images/normal/1_3.png" width="93" height="50" alt="1_3" /></td>
         <td>
-            <img id="1_4" src="images/1_4.png" width="91" height="50" alt="1_4" /></td>
+            <img id="1_4" src="images/normal/1_4.png" width="91" height="50" alt="1_4" /></td>
         <td>
-            <img id="1_5" src="images/1_5.png" width="84" height="50" alt="1_5" /></td>
+            <img id="1_5" src="images/normal/1_5.png" width="84" height="50" alt="1_5" /></td>
         <td>
-            <img id="1_6" src="images/1_6.png" width="78" height="50" alt="1_6" /></td>
+            <img id="1_6" src="images/normal/1_6.png" width="78" height="50" alt="1_6" /></td>
         <td>
-            <img id="1_7" src="images/1_7.png" width="71" height="50" alt="1_7" /></td>
+            <img id="1_7" src="images/normal/1_7.png" width="71" height="50" alt="1_7" /></td>
         <td>
-            <img id="1_8" src="images/1_8.png" width="66" height="50" alt="1_8" /></td>
+            <img id="1_8" src="images/normal/1_8.png" width="66" height="50" alt="1_8" /></td>
         <td>
-            <img id="1_9" src="images/1_9.png" width="63" height="50" alt="1_9" /></td>
+            <img id="1_9" src="images/normal/1_9.png" width="63" height="50" alt="1_9" /></td>
         <td>
-            <img id="1_10" src="images/1_10.png" width="59" height="50" alt="1_10" /></td>
+            <img id="1_10" src="images/normal/1_10.png" width="59" height="50" alt="1_10" /></td>
         <td>
-            <img id="1_11" src="images/1_11.png" width="56" height="50" alt="1_11" /></td>
+            <img id="1_11" src="images/normal/1_11.png" width="56" height="50" alt="1_11" /></td>
         <td>
-            <img id="1_12" src="images/1_12.png" width="57" height="50" alt="1_12" /></td>
+            <img id="1_12" src="images/normal/1_12.png" width="57" height="50" alt="1_12" /></td>
         <td>
-            <img src="images/espacio.gif" width="1" height="50" alt="" /></td>
+            <img src="images/normal/espacio.gif" width="1" height="50" alt="" /></td>
     </tr>
     <tr>
         <td rowspan="2">
-            <img id="2_3" src="images/2_3.png" width="93" height="39" alt="2_3" /></td>
+            <img id="2_3" src="images/normal/2_3.png" width="93" height="39" alt="2_3" /></td>
         <td rowspan="2">
-            <img id="2_4" src="images/2_4.png" width="91" height="39" alt="2_4" /></td>
+            <img id="2_4" src="images/normal/2_4.png" width="91" height="39" alt="2_4" /></td>
         <td rowspan="2">
-            <img id="2_5" src="images/2_5.png" width="84" height="39" alt="2_5" /></td>
+            <img id="2_5" src="images/normal/2_5.png" width="84" height="39" alt="2_5" /></td>
         <td rowspan="2">
-            <img id="2_6" src="images/2_6.png" width="78" height="39" alt="2_6" /></td>
+            <img id="2_6" src="images/normal/2_6.png" width="78" height="39" alt="2_6" /></td>
         <td rowspan="2">
-            <img id="2_7" src="images/2_7.png" width="71" height="39" alt="2_7" /></td>
+            <img id="2_7" src="images/normal/2_7.png" width="71" height="39" alt="2_7" /></td>
         <td rowspan="2">
-            <img id="2_8" src="images/2_8.png" width="66" height="39" alt="2_8" /></td>
+            <img id="2_8" src="images/normal/2_8.png" width="66" height="39" alt="2_8" /></td>
         <td rowspan="2">
-            <img id="2_9" src="images/2_9.png" width="63" height="39" alt="2_9" /></td>
+            <img id="2_9" src="images/normal/2_9.png" width="63" height="39" alt="2_9" /></td>
         <td rowspan="2">
-            <img id="2_10" src="images/2_10.png" width="59" height="39" alt="2_10" /></td>
+            <img id="2_10" src="images/normal/2_10.png" width="59" height="39" alt="2_10" /></td>
         <td rowspan="2">
-            <img id="2_11" src="images/2_11.png" width="56" height="39" alt="2_11" /></td>
+            <img id="2_11" src="images/normal/2_11.png" width="56" height="39" alt="2_11" /></td>
         <td rowspan="2">
-            <img id="2_12" src="images/2_12.png" width="57" height="39" alt="2_12" /></td>
+            <img id="2_12" src="images/normal/2_12.png" width="57" height="39" alt="2_12" /></td>
         <td>
-            <img src="images/espacio.gif" width="1" height="1" alt="" /></td>
+            <img src="images/normal/espacio.gif" width="1" height="1" alt="" /></td>
     </tr>
     <tr>
         <td>
-            <img id="2_0" src="images/2_0.png" width="100" height="38" alt="2_0" /></td>
+            <img id="2_0" src="images/normal/2_0.png" width="100" height="38" alt="2_0" /></td>
         <td>
-            <img id="2_1" src="images/2_1.png" width="108" height="38" alt="2_1" /></td>
+            <img id="2_1" src="images/normal/2_1.png" width="108" height="38" alt="2_1" /></td>
         <td>
-            <img id="2_2" src="images/2_2.png" width="98" height="38" alt="2_2" /></td>
+            <img id="2_2" src="images/normal/2_2.png" width="98" height="38" alt="2_2" /></td>
         <td>
-            <img src="images/espacio.gif" width="1" height="38" alt="" /></td>
+            <img src="images/normal/espacio.gif" width="1" height="38" alt="" /></td>
     </tr>
     <tr>
         <td>
-            <img id="3_0" src="images/3_0.png" width="100" height="40" alt="3_0" /></td>
+            <img id="3_0" src="images/normal/3_0.png" width="100" height="40" alt="3_0" /></td>
         <td>
-            <img id="3_1" src="images/3_1.png" width="108" height="40" alt="3_1" /></td>
+            <img id="3_1" src="images/normal/3_1.png" width="108" height="40" alt="3_1" /></td>
         <td>
-            <img id="3_2" src="images/3_2.png" width="98" height="40" alt="3_2" /></td>
+            <img id="3_2" src="images/normal/3_2.png" width="98" height="40" alt="3_2" /></td>
         <td>
-            <img id="3_3" src="images/3_3.png" width="93" height="40" alt="3_3" /></td>
+            <img id="3_3" src="images/normal/3_3.png" width="93" height="40" alt="3_3" /></td>
         <td>
-            <img id="3_4" src="images/3_4.png" width="91" height="40" alt="3_4" /></td>
+            <img id="3_4" src="images/normal/3_4.png" width="91" height="40" alt="3_4" /></td>
         <td>
-            <img id="3_5" src="images/3_5.png" width="84" height="40" alt="3_5" /></td>
+            <img id="3_5" src="images/normal/3_5.png" width="84" height="40" alt="3_5" /></td>
         <td>
-            <img id="3_6" src="images/3_6.png" width="78" height="40" alt="3_6" /></td>
+            <img id="3_6" src="images/normal/3_6.png" width="78" height="40" alt="3_6" /></td>
         <td>
-            <img id="3_7" src="images/3_7.png" width="71" height="40" alt="3_7" /></td>
+            <img id="3_7" src="images/normal/3_7.png" width="71" height="40" alt="3_7" /></td>
         <td>
-            <img id="3_8" src="images/3_8.png" width="66" height="40" alt="3_8" /></td>
+            <img id="3_8" src="images/normal/3_8.png" width="66" height="40" alt="3_8" /></td>
         <td>
-            <img id="3_9" src="images/3_9.png" width="63" height="40" alt="3_9" /></td>
+            <img id="3_9" src="images/normal/3_9.png" width="63" height="40" alt="3_9" /></td>
         <td>
-            <img id="3_10" src="images/3_10.png" width="59" height="40" alt="3_10" /></td>
+            <img id="3_10" src="images/normal/3_10.png" width="59" height="40" alt="3_10" /></td>
         <td>
-            <img id="3_11" src="images/3_11.png" width="56" height="40" alt="3_11" /></td>
+            <img id="3_11" src="images/normal/3_11.png" width="56" height="40" alt="3_11" /></td>
         <td>
-            <img id="3_12" src="images/3_12.png" width="57" height="40" alt="3_12" /></td>
+            <img id="3_12" src="images/normal/3_12.png" width="57" height="40" alt="3_12" /></td>
         <td>
-            <img src="images/espacio.gif" width="1" height="40" alt="" /></td>
+            <img src="images/normal/espacio.gif" width="1" height="40" alt="" /></td>
     </tr>
     <tr>
         <td>
-            <img id="4_0" src="images/4_0.png" width="100" height="37" alt="4_0" /></td>
+            <img id="4_0" src="images/normal/4_0.png" width="100" height="37" alt="4_0" /></td>
         <td>
-            <img id="4_1" src="images/4_1.png" width="108" height="37" alt="4_1" /></td>
+            <img id="4_1" src="images/normal/4_1.png" width="108" height="37" alt="4_1" /></td>
         <td>
-            <img id="4_2" src="images/4_2.png" width="98" height="37" alt="4_2" /></td>
+            <img id="4_2" src="images/normal/4_2.png" width="98" height="37" alt="4_2" /></td>
         <td>
-            <img id="4_3" src="images/4_3.png" width="93" height="37" alt="4_3" /></td>
+            <img id="4_3" src="images/normal/4_3.png" width="93" height="37" alt="4_3" /></td>
         <td>
-            <img id="4_4" src="images/4_4.png" width="91" height="37" alt="4_4" /></td>
+            <img id="4_4" src="images/normal/4_4.png" width="91" height="37" alt="4_4" /></td>
         <td>
-            <img id="4_5" src="images/4_5.png" width="84" height="37" alt="4_5" /></td>
+            <img id="4_5" src="images/normal/4_5.png" width="84" height="37" alt="4_5" /></td>
         <td>
-            <img id="4_6" src="images/4_6.png" width="78" height="37" alt="4_6" /></td>
+            <img id="4_6" src="images/normal/4_6.png" width="78" height="37" alt="4_6" /></td>
         <td>
-            <img id="4_7" src="images/4_7.png" width="71" height="37" alt="4_7" /></td>
+            <img id="4_7" src="images/normal/4_7.png" width="71" height="37" alt="4_7" /></td>
         <td>
-            <img id="4_8" src="images/4_8.png" width="66" height="37" alt="4_8" /></td>
+            <img id="4_8" src="images/normal/4_8.png" width="66" height="37" alt="4_8" /></td>
         <td>
-            <img id="4_9" src="images/4_9.png" width="63" height="37" alt="4_9" /></td>
+            <img id="4_9" src="images/normal/4_9.png" width="63" height="37" alt="4_9" /></td>
         <td>
-            <img id="4_10" src="images/4_10.png" width="59" height="37" alt="4_10" /></td>
+            <img id="4_10" src="images/normal/4_10.png" width="59" height="37" alt="4_10" /></td>
         <td>
-            <img id="4_11" src="images/4_11.png" width="56" height="37" alt="4_11" /></td>
+            <img id="4_11" src="images/normal/4_11.png" width="56" height="37" alt="4_11" /></td>
         <td>
-            <img id="4_12" src="images/4_12.png" width="57" height="37" alt="4_12" /></td>
+            <img id="4_12" src="images/normal/4_12.png" width="57" height="37" alt="4_12" /></td>
         <td>
-            <img src="images/espacio.gif" width="1" height="37" alt="" /></td>
+            <img src="images/normal/espacio.gif" width="1" height="37" alt="" /></td>
     </tr>
     <tr>
         <td>
-            <img id="5_0" src="images/5_0.png" width="100" height="40" alt="5_0" /></td>
+            <img id="5_0" src="images/normal/5_0.png" width="100" height="40" alt="5_0" /></td>
         <td>
-            <img id="5_1" src="images/5_1.png" width="108" height="40" alt="5_1" /></td>
+            <img id="5_1" src="images/normal/5_1.png" width="108" height="40" alt="5_1" /></td>
         <td>
-            <img id="5_2" src="images/5_2.png" width="98" height="40" alt="5_2" /></td>
+            <img id="5_2" src="images/normal/5_2.png" width="98" height="40" alt="5_2" /></td>
         <td>
-            <img id="5_3" src="images/5_3.png" width="93" height="40" alt="5_3" /></td>
+            <img id="5_3" src="images/normal/5_3.png" width="93" height="40" alt="5_3" /></td>
         <td>
-            <img id="5_4" src="images/5_4.png" width="91" height="40" alt="5_4" /></td>
+            <img id="5_4" src="images/normal/5_4.png" width="91" height="40" alt="5_4" /></td>
         <td>
-            <img id="5_5" src="images/5_5.png" width="84" height="40" alt="5_5" /></td>
+            <img id="5_5" src="images/normal/5_5.png" width="84" height="40" alt="5_5" /></td>
         <td>
-            <img id="5_6" src="images/5_6.png" width="78" height="40" alt="5_6" /></td>
+            <img id="5_6" src="images/normal/5_6.png" width="78" height="40" alt="5_6" /></td>
         <td>
-            <img id="5_7" src="images/5_7.png" width="71" height="40" alt="5_7" /></td>
+            <img id="5_7" src="images/normal/5_7.png" width="71" height="40" alt="5_7" /></td>
         <td>
-            <img id="5_8" src="images/5_8.png" width="66" height="40" alt="5_8" /></td>
+            <img id="5_8" src="images/normal/5_8.png" width="66" height="40" alt="5_8" /></td>
         <td>
-            <img id="5_9" src="images/5_9.png" width="63" height="40" alt="5_9" /></td>
+            <img id="5_9" src="images/normal/5_9.png" width="63" height="40" alt="5_9" /></td>
         <td>
-            <img id="5_10" src="images/5_10.png" width="59" height="40" alt="5_10" /></td>
+            <img id="5_10" src="images/normal/5_10.png" width="59" height="40" alt="5_10" /></td>
         <td>
-            <img id="5_11" src="images/5_11.png" width="56" height="40" alt="5_11" /></td>
+            <img id="5_11" src="images/normal/5_11.png" width="56" height="40" alt="5_11" /></td>
         <td>
-            <img id="5_12" src="images/5_12.png" width="57" height="40" alt="5_12" /></td>
+            <img id="5_12" src="images/normal/5_12.png" width="57" height="40" alt="5_12" /></td>
         <td>
-            <img src="images/espacio.gif" width="1" height="40" alt="" /></td>
+            <img src="images/normal/espacio.gif" width="1" height="40" alt="" /></td>
     </tr>
     <tr>
         <td>
-            <img id="6_0" src="images/6_0.png" width="100" height="54" alt="6_0" /></td>
+            <img id="6_0" src="images/normal/6_0.png" width="100" height="54" alt="6_0" /></td>
         <td>
-            <img id="6_1" src="images/6_1.png" width="108" height="54" alt="6_1" /></td>
+            <img id="6_1" src="images/normal/6_1.png" width="108" height="54" alt="6_1" /></td>
         <td>
-            <img id="6_2" src="images/6_2.png" width="98" height="54" alt="6_2" /></td>
+            <img id="6_2" src="images/normal/6_2.png" width="98" height="54" alt="6_2" /></td>
         <td>
-            <img id="6_3" src="images/6_3.png" width="93" height="54" alt="6_3" /></td>
+            <img id="6_3" src="images/normal/6_3.png" width="93" height="54" alt="6_3" /></td>
         <td>
-            <img id="6_4" src="images/6_4.png" width="91" height="54" alt="6_4" /></td>
+            <img id="6_4" src="images/normal/6_4.png" width="91" height="54" alt="6_4" /></td>
         <td>
-            <img id="6_5" src="images/6_5.png" width="84" height="54" alt="6_5" /></td>
+            <img id="6_5" src="images/normal/6_5.png" width="84" height="54" alt="6_5" /></td>
         <td>
-            <img id="6_6" src="images/6_6.png" width="78" height="54" alt="6_6" /></td>
+            <img id="6_6" src="images/normal/6_6.png" width="78" height="54" alt="6_6" /></td>
         <td>
-            <img id="6_7" src="images/6_7.png" width="71" height="54" alt="6_7" /></td>
+            <img id="6_7" src="images/normal/6_7.png" width="71" height="54" alt="6_7" /></td>
         <td>
-            <img id="6_8" src="images/6_8.png" width="66" height="54" alt="6_8" /></td>
+            <img id="6_8" src="images/normal/6_8.png" width="66" height="54" alt="6_8" /></td>
         <td>
-            <img id="6_9" src="images/6_9.png" width="63" height="54" alt="6_9" /></td>
+            <img id="6_9" src="images/normal/6_9.png" width="63" height="54" alt="6_9" /></td>
         <td>
-            <img id="6_10" src="images/6_10.png" width="59" height="54" alt="6_10" /></td>
+            <img id="6_10" src="images/normal/6_10.png" width="59" height="54" alt="6_10" /></td>
         <td>
-            <img id="6_11" src="images/6_11.png" width="56" height="54" alt="6_11" /></td>
+            <img id="6_11" src="images/normal/6_11.png" width="56" height="54" alt="6_11" /></td>
         <td>
-            <img id="6_12" src="images/6_12.png" width="57" height="54" alt="6_12" /></td>
+            <img id="6_12" src="images/normal/6_12.png" width="57" height="54" alt="6_12" /></td>
         <td>
-            <img src="images/espacio.gif" width="1" height="54" alt="" /></td>
+            <img src="images/normal/espacio.gif" width="1" height="54" alt="" /></td>
     </tr>
 </table>
 
-</div> 
-<script src="/js/libs/MidiConvert.js"></script>
-<script src="/js/engine/score.js"></script>             
-<script src="/js/engine/mastil.js"></script>   
-<script src="/js/engine/sampler.js"></script>
-<script src="/js/engine/sampleSelector.js"></script>
-<script src="/js/engine/playStopButtons.js"></script>
-<script src="/js/engine/bpm.js"></script>
-<script src="/js/engine/setScale.js"></script>
 
+</div> 
+
+
+<script src="/js/engine/score.js"></script>             
+<script src="/js/engine/sampler.js"></script>
+    <script src="/js/engine/mastil.js"></script>
+
+    <script src="/js/engine/playStopButtons.js"></script>
+<script src="/js/engine/bpm.js"></script>
 <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+
 </body>
 
 </html>
