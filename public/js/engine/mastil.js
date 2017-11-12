@@ -102,6 +102,9 @@ var synth = new Tone.PolySynth(8, Tone.Synth, {
         "release ": 0.6
     }
 }).toMaster();
+
+
+//al empezar el transport se acciona currentPicado
 var sixthString = 0
 
 var fifthString = 0
@@ -110,41 +113,32 @@ var thirdString = 0
 var secondString = 0
 var firstString = 0
 
-
-
-
-
-
-
-//al empezar el transport se acciona currentPicado
-
 function drawnote(event, last) {
     var currentEvent = event.name
     var lastEvent = last
-    var notesXstring = 3
-    // console.log(event.name)
 
 
-    for (note in frets.sexta) {
+    if (event.string==="E"){
+        console.log(event.string)
+        for (note in frets.sexta) {
 
-
-        if (event.name === note && sixthString < notesXstring) {
             var fretSelected = frets.sexta[currentEvent]
-            var lastfretSelected = frets.sexta[lastEvent]
+            var lastfretSelected = frets.sexta[lastEvent || currentEvent]
             var pointImage = `images/selected/${frets.sexta[lastEvent]}.png`
             var currentImage = `images/current/images/${frets.sexta[note]}.png`
             Tone.Draw.schedule(function() {
                 document.getElementById(fretSelected).src = currentImage;
                 document.getElementById(lastfretSelected).src = pointImage;
             })
-            sixthString += 1
+
 
         }
     }
-    if(sixthString === notesXstring){
+
+    if(event.string==="A"){
         for (note in frets.quinta) {
 
-        if (event.name === note && fifthString < notesXstring) {
+        if (event.name === note ) {
              fretSelected = frets.quinta[currentEvent]
             if (fifthString == 0) {
                  lastfretSelected = frets.sexta[lastEvent]
@@ -159,14 +153,14 @@ function drawnote(event, last) {
                 document.getElementById(fretSelected).src = currentImage;
                 document.getElementById(lastfretSelected).src = pointImage;
             })
-            fifthString += 1
+
         }
     }
     }
     
-    if(fifthString === notesXstring){ for (note in frets.cuarta) {
+    if(event.string==="D"){ for (note in frets.cuarta) {
 
-        if (event.name === note && fourthString < notesXstring) {
+        if (event.name === note) {
              fretSelected = frets.cuarta[currentEvent]
             if (fourthString == 0) {
                  lastfretSelected = frets.quinta[lastEvent]
@@ -181,14 +175,14 @@ function drawnote(event, last) {
                 document.getElementById(fretSelected).src = currentImage;
                 document.getElementById(lastfretSelected).src = pointImage;
             })
-            fourthString += 1
+
         }
     }}
 
-    if(fourthString === notesXstring){
+    if(event.string==="G"){
         for (note in frets.tercera) {
 
-        if (event.name === note && thirdString < notesXstring) {
+        if (event.name === note ) {
              fretSelected = frets.tercera[currentEvent]
             if (thirdString == 0) {
                  lastfretSelected = frets.cuarta[lastEvent]
@@ -203,16 +197,16 @@ function drawnote(event, last) {
                 document.getElementById(fretSelected).src = currentImage;
                 document.getElementById(lastfretSelected).src = pointImage;
             })
-            thirdString += 1
+
         }
     }
     // console.log(thirdString)
     }
-    if(thirdString === notesXstring){
+    if(event.string==="B"){
 
         for (note in frets.segunda) {
 
-        if (event.name === note && secondString < notesXstring) {
+        if (event.name === note) {
 
             fretSelected = frets.segunda[currentEvent]
             if (secondString == 0) {
@@ -229,11 +223,11 @@ function drawnote(event, last) {
                 document.getElementById(fretSelected).src = currentImage;
                 document.getElementById(lastfretSelected).src = pointImage;
             })
-            secondString += 1
+
         }
 
     }}
-    if(secondString === notesXstring){
+    if(event.string==="e"){
          for (note in frets.primera) {
 
         if (event.name === note) {
@@ -251,7 +245,7 @@ function drawnote(event, last) {
                 document.getElementById(fretSelected).src = currentImage;
                 document.getElementById(lastfretSelected).src = pointImage;
             })
-            firstString += 1
+
         }
     }
     }
