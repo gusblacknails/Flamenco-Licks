@@ -129,10 +129,10 @@ function drawnote(event, last) {
 
 
         if (event.name === note && sixthString < notesXstring) {
-            let fretSelected = frets.sexta[currentEvent]
-            let lastfretSelected = frets.sexta[lastEvent]
-            let pointImage = `images/selected/${frets.sexta[lastEvent]}.png`
-            let currentImage = `images/current/images/${frets.sexta[note]}.png`
+            var fretSelected = frets.sexta[currentEvent]
+            var lastfretSelected = frets.sexta[lastEvent]
+            var pointImage = `images/selected/${frets.sexta[lastEvent]}.png`
+            var currentImage = `images/current/images/${frets.sexta[note]}.png`
             Tone.Draw.schedule(function() {
                 document.getElementById(fretSelected).src = currentImage;
                 document.getElementById(lastfretSelected).src = pointImage;
@@ -259,13 +259,21 @@ function drawnote(event, last) {
 }
 
 var lastEvent = null
+function playNote(time, melody) {
 
-function playNote(time, event) {
-    console.log(event)
-    synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
-    drawnote(event, lastEvent)
-    lastEvent = event.name
+
+    console.log(melody)
 }
+
+// function playNote(time, event) {
+//
+//
+//     synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
+//     drawnote(event, lastEvent)
+//
+//
+//     lastEvent = event.name
+// }
 //acciona el midi con el boton "play" y empieza el transport
 var button = document.getElementById("play");
 button.addEventListener("click ", function() {
@@ -281,9 +289,9 @@ button.addEventListener("click ", function() {
 });
 
 
-
+//cambia el midi segun lo que se escoja en el select
 function currentSong(){
-    var currentMidi= ["buleria_Aflaco.mid","Picado_Tango_A_F.mid","buleria_AFla_midichannels.mid"];
+    var currentMidi= ["buleria_Aflaco.mid","Picado_Tango_A_F.mid","buleria_Aflaco.mid.mid"];
     var selects = document.getElementById("currentMidi");
     var selectedValue = selects.options[selects.selectedIndex].value;
     MidiConvert.load("midis/" + currentMidi[selectedValue]).then(function(midi) {
@@ -301,30 +309,98 @@ function currentSong(){
     console.log(currentMidi[selectedValue])
 }
 
+function drawnote_2(event) {
+
+    console.log(event)
+
+
+}
 
 MidiConvert.load("midis/mc_v3.mid").then(function(midi) {
 
-    console.log(midi.tracks[2].notes)
-    var picado= midi
-    var melody_sexta = midi.tracks[1].notes;
-    var melody_quinta = midi.tracks[2].notes;
-    var melody_cuarta = midi.tracks[3].notes;
-    var melody_tercera = midi.tracks[4].notes;
-    var melody_segunda = midi.tracks[5].notes;
-    var melody_primera = midi.tracks[6].notes;
+    console.log(midi)
 
-    console.log(melody_sexta)
-    console.log(melody_quinta)
+    var melody_sexta = midi.tracks[1].notes;
+    var sexta_string = melody_sexta.map(function(el) {
+        var o = Object.assign({}, el);
+        o.string = "E";
+        return o;
+    })
+    var melody_quinta = midi.tracks[2].notes;
+    var quinta_string = melody_quinta.map(function(el) {
+        var o = Object.assign({}, el);
+        o.string = "A";
+        return o;
+    })
+    var melody_cuarta = midi.tracks[3].notes;
+    var cuarta_string = melody_cuarta.map(function(el) {
+            var o = Object.assign({}, el);
+            o.string = "D";
+            return o;
+    })
+    var melody_tercera = midi.tracks[4].notes;
+    var tercera_string = melody_tercera.map(function(el) {
+            var o = Object.assign({}, el);
+            o.string = "G";
+            return o;
+    })
+    var melody_segunda = midi.tracks[5].notes;
+    var segunda_string = melody_segunda.map(function(el) {
+            var o = Object.assign({}, el);
+            o.string = "B";
+            return o;
+    })
+    var melody_primera = midi.tracks[6].notes;
+    var primera_string = melody_primera.map(function(el) {
+            var o = Object.assign({}, el);
+            o.string = "e";
+            return o;
+        })
+
+        console.log(sexta_string)
+    console.log(quinta_string)
     // make sure you set the tempo before you schedule the events
     Tone.Transport.bpm.value = midi.bpm;
     Tone.Transport.timeSignature = midi.timeSignature;
     var sexta = new Tone.Part(playNote, melody_sexta).start(0);
-    var quinta = new Tone.Part(playNote, melody_quinta).start(0)
-    var cuarta = new Tone.Part(playNote, melody_cuarta).start(0)
-    var tercera = new Tone.Part(playNote, melody_tercera).start(0)
-    var segunda = new Tone.Part(playNote, melody_segunda).start(0)
-    var primera = new Tone.Part(playNote, melody_primera).start(0)
+
+    var quinta = new Tone.Part(playNote, melody_quinta).start(0);
+
+    var cuarta = new Tone.Part(playNote, melody_cuarta).start(0);
+
+    var tercera = new Tone.Part(playNote, melody_tercera).start(0);
+
+    var segunda = new Tone.Part(playNote, melody_segunda).start(0);
+
+    var primera = new Tone.Part(playNote, melody_primera).start(0);
+
 });
+
+
+// MidiConvert.load("midis/mc_v3.mid").then(function(midi) {
+//
+//     console.log(midi.tracks[2].notes)
+//
+//     var melody_sexta = midi.tracks[1].notes;
+//     var melody_quinta = midi.tracks[2].notes;
+//     var melody_cuarta = midi.tracks[3].notes;
+//     var melody_tercera = midi.tracks[4].notes;
+//     var melody_segunda = midi.tracks[5].notes;
+//     var melody_primera = midi.tracks[6].notes;
+//
+//     console.log(melody_sexta)
+//     console.log(melody_quinta)
+//     // make sure you set the tempo before you schedule the events
+//     Tone.Transport.bpm.value = midi.bpm;
+//     Tone.Transport.timeSignature = midi.timeSignature;
+//     var sexta = new Tone.Part(playNote, melody_sexta).start(0);
+//     var quinta = new Tone.Part(playNote, melody_quinta).start(0)
+//     var cuarta = new Tone.Part(playNote, melody_cuarta).start(0)
+//     var tercera = new Tone.Part(playNote, melody_tercera).start(0)
+//     var segunda = new Tone.Part(playNote, melody_segunda).start(0)
+//     var primera = new Tone.Part(playNote, melody_primera).start(0)
+// });
+
 // MidiConvert.load("midis/mc_v3.mid").then(function(midi) {
 //
 //     console.log(midi)
