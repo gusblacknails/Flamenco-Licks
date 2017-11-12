@@ -259,21 +259,16 @@ function drawnote(event, last) {
 }
 
 var lastEvent = null
-function playNote(time, melody) {
+
+function playNote(time, event) {
 
 
-    console.log(melody)
+    synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
+    drawnote(event, lastEvent)
+
+
+    lastEvent = event.name
 }
-
-// function playNote(time, event) {
-//
-//
-//     synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
-//     drawnote(event, lastEvent)
-//
-//
-//     lastEvent = event.name
-// }
 //acciona el midi con el boton "play" y empieza el transport
 var button = document.getElementById("play");
 button.addEventListener("click ", function() {
@@ -321,44 +316,34 @@ MidiConvert.load("midis/mc_v3.mid").then(function(midi) {
     console.log(midi)
 
     var melody_sexta = midi.tracks[1].notes;
-    var sexta_string = melody_sexta.map(function(el) {
-        var o = Object.assign({}, el);
-        o.string = "E";
-        return o;
-    })
-    var melody_quinta = midi.tracks[2].notes;
-    var quinta_string = melody_quinta.map(function(el) {
-        var o = Object.assign({}, el);
-        o.string = "A";
-        return o;
-    })
-    var melody_cuarta = midi.tracks[3].notes;
-    var cuarta_string = melody_cuarta.map(function(el) {
-            var o = Object.assign({}, el);
-            o.string = "D";
-            return o;
-    })
-    var melody_tercera = midi.tracks[4].notes;
-    var tercera_string = melody_tercera.map(function(el) {
-            var o = Object.assign({}, el);
-            o.string = "G";
-            return o;
-    })
-    var melody_segunda = midi.tracks[5].notes;
-    var segunda_string = melody_segunda.map(function(el) {
-            var o = Object.assign({}, el);
-            o.string = "B";
-            return o;
-    })
-    var melody_primera = midi.tracks[6].notes;
-    var primera_string = melody_primera.map(function(el) {
-            var o = Object.assign({}, el);
-            o.string = "e";
-            return o;
-        })
+    melody_sexta.forEach(function(element){
+        element.string = "E"
+    });
 
-        console.log(sexta_string)
-    console.log(quinta_string)
+    var melody_quinta = midi.tracks[2].notes;
+    melody_quinta.forEach(function(element){
+        element.string = "A"
+    });
+    var melody_cuarta = midi.tracks[3].notes;
+    melody_cuarta.forEach(function(element){
+        element.string = "D"
+    });
+    var melody_tercera = midi.tracks[4].notes;
+    melody_tercera.forEach(function(element){
+        element.string = "G"
+    });
+    var melody_segunda = midi.tracks[5].notes;
+    melody_segunda.forEach(function(element){
+        element.string = "B"
+    });
+    var melody_primera = midi.tracks[6].notes;
+    melody_primera.forEach(function(element){
+        element.string = "e"
+    });
+    console.log(melody_sexta)
+    console.log(melody_segunda)
+
+
     // make sure you set the tempo before you schedule the events
     Tone.Transport.bpm.value = midi.bpm;
     Tone.Transport.timeSignature = midi.timeSignature;
