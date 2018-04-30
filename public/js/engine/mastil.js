@@ -411,7 +411,81 @@ MidiConvert.load("midis/Picados.mid").then(function(midi) {
          }
 
      })
+     fret_to_miditrack(midi)
  }
-
+console.log(midi)
 });
+function create_tab(midi){
+    var stave = new VF.TabStave(10, 40, 400);
+    stave.addClef("tab").setContext(context).draw();
+    var draw_notes = []
+    for (var i= 0 ; i<midi.tracks.length; ++i){
+        notes.forEach(function (nota) {
+             draw_notes += [
+                // A single note
+                new VF.TabNote({
+                    positions: [{str: nota.string, fret: nota.fret}],
+                    duration: "q"}),
 
+            ];
+
+        })
+    }
+
+
+
+    VF.Formatter.FormatAndDraw(context, stave, draw_notes);
+}
+function fret_to_miditrack(midi){
+    for (let i= 0 ; i<midi.tracks.length; ++i){
+        let track = midi.tracks[i].notes
+        track.forEach(function (nota) {
+            for(let fret in frets){
+                if (nota.string===fret){
+                    for  (let note in fret){
+                        if (frets[fret][nota.name]){
+                            nota.fret= frets[fret][nota.name].slice(2,3)
+                        }
+                    }
+                }
+            }
+        })
+    }
+    return midi
+}
+durations={
+    "120":{
+        "w": 2.000,
+        "h": 1.000,
+        "hd":1.500,
+        "q":0.500,
+        "qd":0.750,
+        "8":0.250,
+        "8d":0.375,
+        "16":0.125,
+        "16d":0.1875,
+        "32":0.0625,
+        "32d":0.09372,
+        "64":0.03125,
+        "64d":0.046875,
+
+
+    },
+    "60":{
+        "w":4.000 ,
+        "h":2.000,
+        "hd":3.000,
+        "q":1.000,
+        "qd":1.500,
+        "8":0.500,
+        "8d":0.750,
+        "16":0.250,
+        "16d":0.375,
+        "32":0.125,
+        "32d":0.1875,
+        "64":0.0625,
+        "64d":0.03125,
+
+
+}
+}
