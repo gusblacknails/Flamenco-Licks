@@ -451,7 +451,26 @@ function fret_to_miditrack(midi){
             }
         })
     }
-    return midi
+    duration_parser(midi)
+}
+function duration_parser(midi){
+    for (let i= 0 ; i<midi.tracks.length; ++i){
+        let track = midi.tracks[i].notes
+        if(midi.header.bpm===120){
+            track.forEach(function (nota) {
+
+                for (let duration in durations["120"]){
+
+                if ( durations["120"][duration] + 0.010 >= nota.duration && nota.duration >= durations["120"][duration] - 0.010){
+                    console.log(duration)
+                    console.log(nota.duration)
+                    nota.music_duration= duration
+                }
+                }
+            })
+        }
+
+    }
 }
 durations={
     "120":{
