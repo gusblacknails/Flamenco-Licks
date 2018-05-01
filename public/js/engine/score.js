@@ -1,7 +1,7 @@
 // import 'vexflow'
 
 VF = Vex.Flow;
-var div = document.getElementById("boo")
+var div = document.getElementById("tab")
 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 renderer.resize(200, 200);
 var context = renderer.getContext();

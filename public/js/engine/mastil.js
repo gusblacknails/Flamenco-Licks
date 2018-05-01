@@ -91,7 +91,43 @@ var frets = {
         'E6': "1_12"
     },
 };
-var synth = new Tone.PolySynth(8, Tone.Synth, {
+durations={
+    "120":{
+        "w": 2.000,
+        "h": 1.000,
+        "hd":1.500,
+        "q":0.500,
+        "qd":0.750,
+        "8":0.250,
+        "8d":0.375,
+        "16":0.125,
+        "16d":0.1875,
+        "32":0.0625,
+        "32d":0.09372,
+        "64":0.03125,
+        "64d":0.046875,
+
+
+    },
+    "60":{
+        "w":4.000 ,
+        "h":2.000,
+        "hd":3.000,
+        "q":1.000,
+        "qd":1.500,
+        "8":0.500,
+        "8d":0.750,
+        "16":0.250,
+        "16d":0.375,
+        "32":0.125,
+        "32d":0.1875,
+        "64":0.0625,
+        "64d":0.03125,
+
+
+    }
+}
+const synth = new Tone.PolySynth(8, Tone.Synth, {
     "oscillator ": {
         "type ": "sine3 "
     },
@@ -411,30 +447,49 @@ MidiConvert.load("midis/Picados.mid").then(function(midi) {
          }
 
      })
-     fret_to_miditrack(midi)
+
  }
-console.log(midi)
+    console.log(midi)
+    fret_to_miditrack(midi)
+    console.log(midi)
+    create_tab(midi)
 });
+
+
 function create_tab(midi){
-    var stave = new VF.TabStave(10, 40, 400);
+
+    VF = Vex.Flow;
+
+// Create an SVG renderer and attach it to the DIV element named "boo".
+    var div = document.getElementById("boo")
+    var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+// Size our svg:
+    renderer.resize(2000, 200);
+
+// And get a drawing context:
+    var context = renderer.getContext();
+    let stave = new VF.TabStave(10, 40, 400);
     stave.addClef("tab").setContext(context).draw();
-    var draw_notes = []
-    for (var i= 0 ; i<midi.tracks.length; ++i){
-        notes.forEach(function (nota) {
-             draw_notes += [
-                // A single note
-                new VF.TabNote({
-                    positions: [{str: nota.string, fret: nota.fret}],
-                    duration: "q"}),
+    let draw_notes =[]
+    for (let i= 1 ; i<midi.tracks.length; ++i){
+        let notes = midi.tracks[i].notes
+        for ( let note in notes) {
+            console.log(typeof(parseInt(notes[note]["string"])))
+            console.log(typeof (notes[note]["music_duration"]))
+            console.log(typeof (parseInt(notes[note]["fret"])))
+           string = parseInt(notes[note]["string"])
+           draw_notes.push(new VF.TabNote({
+              /* positions: [{str: parseInt(notes[note]["string"]), fret: parseInt(notes[note]["fret"])}],*/
+              /* duration: notes[note]["music_duration"]}))*/
+            positions: [{str: string, fret: 5}],
+            duration: notes[note]["music_duration"]}))
+        }
 
-            ];
-
-        })
     }
-
-
-
+    console.log(draw_notes)
     VF.Formatter.FormatAndDraw(context, stave, draw_notes);
+
 }
 function fret_to_miditrack(midi){
     for (let i= 0 ; i<midi.tracks.length; ++i){
@@ -452,6 +507,7 @@ function fret_to_miditrack(midi){
         })
     }
     duration_parser(midi)
+
 }
 function duration_parser(midi){
     for (let i= 0 ; i<midi.tracks.length; ++i){
@@ -462,8 +518,6 @@ function duration_parser(midi){
                 for (let duration in durations["120"]){
 
                 if ( durations["120"][duration] + 0.010 >= nota.duration && nota.duration >= durations["120"][duration] - 0.010){
-                    console.log(duration)
-                    console.log(nota.duration)
                     nota.music_duration= duration
                 }
                 }
@@ -471,40 +525,5 @@ function duration_parser(midi){
         }
 
     }
-}
-durations={
-    "120":{
-        "w": 2.000,
-        "h": 1.000,
-        "hd":1.500,
-        "q":0.500,
-        "qd":0.750,
-        "8":0.250,
-        "8d":0.375,
-        "16":0.125,
-        "16d":0.1875,
-        "32":0.0625,
-        "32d":0.09372,
-        "64":0.03125,
-        "64d":0.046875,
 
-
-    },
-    "60":{
-        "w":4.000 ,
-        "h":2.000,
-        "hd":3.000,
-        "q":1.000,
-        "qd":1.500,
-        "8":0.500,
-        "8d":0.750,
-        "16":0.250,
-        "16d":0.375,
-        "32":0.125,
-        "32d":0.1875,
-        "64":0.0625,
-        "64d":0.03125,
-
-
-}
 }
