@@ -425,7 +425,7 @@ function currentSong(){
 }
 
 
-MidiConvert.load("midis/Picados.mid").then(function(midi) {
+MidiConvert.load("midis/mc_v3.mid").then(function(midi) {
 
 
 
@@ -449,9 +449,8 @@ MidiConvert.load("midis/Picados.mid").then(function(midi) {
      })
 
  }
-    console.log(midi)
+
     fret_to_miditrack(midi)
-    console.log(midi)
     create_tab(midi)
 });
 
@@ -465,24 +464,44 @@ function create_tab(midi){
     var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
 // Size our svg:
-    renderer.resize(2000, 200);
+    renderer.resize(4000, 200);
 
 // And get a drawing context:
     var context = renderer.getContext();
-    let stave = new VF.TabStave(10, 40, 400);
+    let stave = new VF.TabStave(10, 40, 800);
     stave.addClef("tab").setContext(context).draw();
     let draw_notes =[]
     for (let i= 1 ; i<midi.tracks.length; ++i){
         let notes = midi.tracks[i].notes
         for ( let note in notes) {
-            console.log(typeof(parseInt(notes[note]["string"])))
-            console.log(typeof (notes[note]["music_duration"]))
-            console.log(typeof (parseInt(notes[note]["fret"])))
-           string = parseInt(notes[note]["string"])
+            /*console.log(typeof(parseInt(notes[note]["string"])))*/
+            /*console.log(typeof (notes[note]["music_duration"]))*/
+            /*console.log(typeof (parseInt(notes[note]["fret"])))*/
+            let cuerda = notes[note]["string"]
+            let cuerdas = ["e", "B", "G", "D", "A", "E"]
+
+            function string_parse(cuerda, cuerdas) {
+                 for (var i = 0; i < cuerdas.length; i++) {
+
+                       if (cuerda === cuerdas[i]) {
+                          cuerda = i +1
+                       }
+                       }
+                       return cuerda
+           }
+
+            var cuerda_parsed =  string_parse(cuerda, cuerdas)
+
+
+
+
+           let traste = parseInt(notes[note]["fret"])
+           console.log(notes[note]["string"], typeof (notes[note]["string"]))
+
            draw_notes.push(new VF.TabNote({
               /* positions: [{str: parseInt(notes[note]["string"]), fret: parseInt(notes[note]["fret"])}],*/
               /* duration: notes[note]["music_duration"]}))*/
-            positions: [{str: string, fret: 5}],
+            positions: [{str: cuerda_parsed, fret: traste}],
             duration: notes[note]["music_duration"]}))
         }
 
