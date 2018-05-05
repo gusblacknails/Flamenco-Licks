@@ -425,7 +425,7 @@ function currentSong(){
 }
 
 
-MidiConvert.load("midis/mc_v3.mid").then(function(midi) {
+MidiConvert.load("midis/Picados.mid").then(function(midi) {
 
 
 
@@ -451,11 +451,12 @@ MidiConvert.load("midis/mc_v3.mid").then(function(midi) {
  }
 
     fret_to_miditrack(midi)
+    tab_parser(midi)
     create_tab(midi)
 });
 
 
-function create_tab(midi){
+function create_tab(midi) {
 
     VF = Vex.Flow;
 
@@ -470,45 +471,78 @@ function create_tab(midi){
     var context = renderer.getContext();
     let stave = new VF.TabStave(10, 40, 800);
     stave.addClef("tab").setContext(context).draw();
-    let draw_notes =[]
-    for (let i= 1 ; i<midi.tracks.length; ++i){
+    let draw_notes = []
+    let sort_notes = []
+    let sort_notes_arr = []
+
+
+    for (let i = 1; i < midi.tracks.length; ++i) {
         let notes = midi.tracks[i].notes
-        for ( let note in notes) {
-            /*console.log(typeof(parseInt(notes[note]["string"])))*/
-            /*console.log(typeof (notes[note]["music_duration"]))*/
-            /*console.log(typeof (parseInt(notes[note]["fret"])))*/
-            let cuerda = notes[note]["string"]
-            let cuerdas = ["e", "B", "G", "D", "A", "E"]
+        sort_notes.push(notes)
+    }
 
-            function string_parse(cuerda, cuerdas) {
-                 for (var i = 0; i < cuerdas.length; i++) {
+    for (let i = 0; i < sort_notes.length; ++i) {
 
-                       if (cuerda === cuerdas[i]) {
-                          cuerda = i +1
-                       }
-                       }
-                       return cuerda
-           }
+        let notes = sort_notes[i]
 
-            var cuerda_parsed =  string_parse(cuerda, cuerdas)
+        notes.forEach(function (note) {
+             sort_notes_arr.push(note)
+        })
 
-
-
-
-           let traste = parseInt(notes[note]["fret"])
-           console.log(notes[note]["string"], typeof (notes[note]["string"]))
-
-           draw_notes.push(new VF.TabNote({
-              /* positions: [{str: parseInt(notes[note]["string"]), fret: parseInt(notes[note]["fret"])}],*/
-              /* duration: notes[note]["music_duration"]}))*/
-            positions: [{str: cuerda_parsed, fret: traste}],
-            duration: notes[note]["music_duration"]}))
-        }
 
     }
-    console.log(draw_notes)
-    VF.Formatter.FormatAndDraw(context, stave, draw_notes);
 
+    
+
+    sort_notes_arr.sort(function(a, b) {
+
+        return a.time - b.time;
+    });
+
+        sort_notes_arr.forEach(function(note) {
+
+            draw_notes.push(new VF.TabNote({
+                positions: [{str: note.cuerda_parsed, fret: note.fret_parsed}],
+                duration: note.music_duration,
+                time: note.time
+            }))
+
+        })
+    
+     VF.Formatter.FormatAndDraw(context, stave, draw_notes);
+}
+
+function tab_parser(midi){
+
+
+        for (let i = 1; i < midi.tracks.length; ++i) {
+            let notes = midi.tracks[i].notes
+            for (let note in notes) {
+                let cuerda = notes[note]["string"]
+                let cuerdas = ["e", "B", "G", "D", "A", "E"]
+
+
+                notes[note]["cuerda_parsed"] = string_parse(cuerda, cuerdas)
+
+                notes[note]["fret_parsed"] = parseInt(notes[note]["fret"])
+
+            }
+
+
+
+        }
+
+       console.log(midi)
+
+}
+function string_parse(cuerda, cuerdas) {
+     for (var i = 0; i < cuerdas.length; i++) {
+
+          if (cuerda === cuerdas[i]) {
+              cuerda = i + 1
+          }
+     }
+     return cuerda
 }
 function fret_to_miditrack(midi){
     for (let i= 0 ; i<midi.tracks.length; ++i){
