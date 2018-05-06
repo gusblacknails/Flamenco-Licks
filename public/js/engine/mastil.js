@@ -1,5 +1,5 @@
 
-var frets = {
+const frets = {
     E: {
         'E3': "6_0",
         'F3': "6_1",
@@ -91,7 +91,7 @@ var frets = {
         'E6': "1_12"
     },
 };
-durations={
+const durations={
     "120":{
         "w": 2.000,
         "h": 1.000,
@@ -139,254 +139,56 @@ const synth = new Tone.PolySynth(8, Tone.Synth, {
     }
 }).toMaster();
 
-
-
-
-function drawnote_refactor(event, last){
+function fretboard_draw(event, last){
+    const cuerdas = ["E","A","D","G","B","e"];
     let currentEvent = event;
-
     let lastEvent = last || "event" + currentEvent;
-
     let laststring = lastEvent.string ;
     let lastname = lastEvent.name;
 
-
-
-    if (event.string==="E"){
-
-        for (let note in frets.E) {
-            if (event.name === note || event.instrument=== note ){
-                let fretSelected = frets.E[currentEvent.name];
-
-
-                let lastfretSelected = fretSelected
-
-                if(laststring === "E"){
-                    lastfretSelected = frets.E[lastname]
+    cuerdas.forEach(function(cuerda) {
+        if (event.string === cuerda) {
+            console.log(cuerda)
+            for (let note in frets[cuerda]) {
+                if (event.name === note || event.instrument === note) {
+                    let fretSelected = frets[cuerda][currentEvent.name];
+                    let lastfretSelected = fretSelected;
+                    cuerdas.forEach(function(current_cuerda){
+                        if (laststring === current_cuerda) {
+                            lastfretSelected = frets[current_cuerda][lastname]
+                        }
+                    });
+                    let pointImage = `images/selected/` + lastfretSelected + `.png`;
+                    let currentImage = `images/current/images/${frets[cuerda][note]}.png`;
+                    Tone.Draw.schedule(function () {
+                        document.getElementById(fretSelected).src = currentImage;
+                        document.getElementById(lastfretSelected).src = pointImage;
+                    })
                 }
-                if(laststring === "A"){
-                    lastfretSelected = frets.A[lastname]
-                }
-                if(laststring === "D"){
-                    lastfretSelected = frets.D[lastname]
-                }
-                if(laststring === "G"){
-                    lastfretSelected = frets.G[lastname]
-                }
-                if(laststring === "B"){
-                    lastfretSelected = frets.B[lastname]
-                }
-                if(laststring === "e"){
-                    lastfretSelected = frets.e[lastname]
-                }
-
-                //
-                let pointImage = `images/selected/`+ lastfretSelected +`.png`;
-                console.log(pointImage)
-                let currentImage = `images/current/images/${frets.E[note]}.png`;
-                console.log(currentImage)
-                Tone.Draw.schedule(function() {
-                    document.getElementById(fretSelected).src = currentImage;
-                    document.getElementById(lastfretSelected).src = pointImage;
-                })
-                }
-
+            }
         }
-    }
-    if (event.string==="A"){
-
-        for (note in frets.A) {
-            if (event.name === note || event.instrument=== note ){
-                let fretSelected = frets.A[currentEvent.name];
-
-                let lastfretSelected = fretSelected
-
-                if(laststring === "E"){
-                    lastfretSelected = frets.E[lastname]
-                }
-                if(laststring === "A"){
-                    lastfretSelected = frets.A[lastname]
-                }
-                if(laststring === "D"){
-                    lastfretSelected = frets.D[lastname]
-                }
-                if(laststring === "G"){
-                    lastfretSelected = frets.G[lastname]
-                }
-                if(laststring === "B"){
-                    lastfretSelected = frets.B[lastname]
-                }
-                if(laststring === "e"){
-                    lastfretSelected = frets.e[lastname]
-                }
-
-                let pointImage = `images/selected/`+ lastfretSelected +`.png`;
-                let currentImage = `images/current/images/${frets.A[note]}.png`;
-                console.log(pointImage)
-                console.log(currentImage)
-                Tone.Draw.schedule(function() {
-                    document.getElementById(fretSelected).src = currentImage;
-                    document.getElementById(lastfretSelected).src = pointImage;
-                })}
-
-        }
-    }
-    if (event.string==="D"){
-
-        for (note in frets.D) {
-            if (event.name === note ){
-                let fretSelected = frets.D[currentEvent.name];
-
-                let lastfretSelected = fretSelected
-
-                if(laststring === "E"){
-                    lastfretSelected = frets.E[lastname]
-                }
-                if(laststring === "A"){
-                    lastfretSelected = frets.A[lastname]
-                }
-                if(laststring === "D"){
-                    lastfretSelected = frets.D[lastname]
-                }
-                if(laststring === "G"){
-                    lastfretSelected = frets.G[lastname]
-                }
-                if(laststring === "B"){
-                    lastfretSelected = frets.B[lastname]
-                }
-                if(laststring === "e"){
-                    lastfretSelected = frets.e[lastname]
-                }
-
-                let pointImage = `images/selected/`+ lastfretSelected +`.png`;
-                let currentImage = `images/current/images/${frets.D[note]}.png`;
-                Tone.Draw.schedule(function() {
-                    document.getElementById(fretSelected).src = currentImage;
-                    document.getElementById(lastfretSelected).src = pointImage;
-                })}
-
-        }
-    }
-    if (event.string==="G"){
-
-        for (note in frets.G) {
-            if (event.name === note ){
-                let fretSelected = frets.G[currentEvent.name];
-
-                let lastfretSelected = fretSelected
-
-                if(laststring === "E"){
-                    lastfretSelected = frets.E[lastname]
-                }
-                if(laststring === "A"){
-                    lastfretSelected = frets.A[lastname]
-                }
-                if(laststring === "D"){
-                    lastfretSelected = frets.D[lastname]
-                }
-                if(laststring === "G"){
-                    lastfretSelected = frets.G[lastname]
-                }
-                if(laststring === "B"){
-                    lastfretSelected = frets.B[lastname]
-                }
-                if(laststring === "e"){
-                    lastfretSelected = frets.e[lastname]
-                }
-
-                let pointImage = `images/selected/`+ lastfretSelected +`.png`;
-                let currentImage = `images/current/images/${frets.G[note]}.png`;
-                Tone.Draw.schedule(function() {
-                    document.getElementById(fretSelected).src = currentImage;
-                    document.getElementById(lastfretSelected).src = pointImage;
-                })}
-
-        }
-    }
-    if (event.string==="B"){
-
-        for (note in frets.B) {
-            if (event.name === note ){
-                let fretSelected = frets.B[currentEvent.name];
-
-                let lastfretSelected = fretSelected
-
-                if(laststring === "E"){
-                    lastfretSelected = frets.E[lastname]
-                }
-                if(laststring === "A"){
-                    lastfretSelected = frets.A[lastname]
-                }
-                if(laststring === "D"){
-                    lastfretSelected = frets.D[lastname]
-                }
-                if(laststring === "G"){
-                    lastfretSelected = frets.G[lastname]
-                }
-                if(laststring === "B"){
-                    lastfretSelected = frets.B[lastname]
-                }
-                if(laststring === "e"){
-                    lastfretSelected = frets.e[lastname]
-                }
-
-                let pointImage = `images/selected/`+ lastfretSelected +`.png`;
-                let currentImage = `images/current/images/${frets.B[note]}.png`;
-                Tone.Draw.schedule(function() {
-                    document.getElementById(fretSelected).src = currentImage;
-                    document.getElementById(lastfretSelected).src = pointImage;
-                })}
-
-        }
-    }
-    if (event.string==="e"){
-
-        for (note in frets.e) {
-            if (event.name === note ){
-                let fretSelected = frets.e[currentEvent.name];
-
-                let lastfretSelected = fretSelected
-
-                if(laststring === "E"){
-                    lastfretSelected = frets.E[lastname]
-                }
-                if(laststring === "A"){
-                    lastfretSelected = frets.A[lastname]
-                }
-                if(laststring === "D"){
-                    lastfretSelected = frets.D[lastname]
-                }
-                if(laststring === "G"){
-                    lastfretSelected = frets.G[lastname]
-                }
-                if(laststring === "B"){
-                    lastfretSelected = frets.B[lastname]
-                }
-                if(laststring === "e"){
-                    lastfretSelected = frets.e[lastname]
-                }
-
-                let pointImage = `images/selected/`+ lastfretSelected +`.png`;
-                let currentImage = `images/current/images/${frets.e[note]}.png`;
-                Tone.Draw.schedule(function() {
-                    document.getElementById(fretSelected).src = currentImage;
-                    document.getElementById(lastfretSelected).src = pointImage;
-                })}
-
-        }
-    }
+    })
 }
 
-let lastEvent = null;
+function draw_tab(tab_notes, note_counter){
 
+     console.log(tab_notes)
+/*
+     tab_notes[note_counter].setStyle({fillStyle: "red", strokeStyle: "blue"});
+*/
+
+
+}
+let lastEvent = null;
+let note_counter = 1;
 function playNote(time, event) {
 
 
     synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
-    // drawnote(event, lastEvent)
-    drawnote_refactor(event, lastEvent);
-
-     lastEvent = event;
+    fretboard_draw(event, lastEvent);
+    
+    lastEvent = event;
+    note_counter +=1;
 
 }
 //acciona el midi con el boton "play" y empieza el transport
@@ -402,7 +204,6 @@ button.addEventListener("click ", function() {
 
     }
 });
-
 
 //cambia el midi segun lo que se escoja en el select
 function currentSong(){
@@ -425,7 +226,7 @@ function currentSong(){
 }
 
 
-MidiConvert.load("midis/Picados.mid").then(function(midi) {
+let tab_notes= MidiConvert.load("midis/Picados.mid").then(function(midi) {
 
 
 
@@ -452,25 +253,27 @@ MidiConvert.load("midis/Picados.mid").then(function(midi) {
 
     fret_to_miditrack(midi)
     tab_parser(midi)
-    create_tab(midi)
+   let draw_notes = create_tab(midi)
+     return draw_notes
 });
-
+console.log(tab_notes)
 
 function create_tab(midi) {
 
     VF = Vex.Flow;
 
-// Create an SVG renderer and attach it to the DIV element named "boo".
-    var div = document.getElementById("boo")
+    var div = document.getElementById("mySVGDiv")
     var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
-// Size our svg:
     renderer.resize(4000, 200);
 
-// And get a drawing context:
     var context = renderer.getContext();
+
     let stave = new VF.TabStave(10, 40, 800);
+
     stave.addClef("tab").setContext(context).draw();
+
+
     let draw_notes = []
     let sort_notes = []
     let sort_notes_arr = []
@@ -505,11 +308,14 @@ function create_tab(midi) {
                 positions: [{str: note.cuerda_parsed, fret: note.fret_parsed}],
                 duration: note.music_duration,
                 time: note.time
+
             }))
 
         })
     
      VF.Formatter.FormatAndDraw(context, stave, draw_notes);
+        console.log(draw_notes)
+    return draw_notes
 }
 
 function tab_parser(midi){
@@ -528,15 +334,13 @@ function tab_parser(midi){
 
             }
 
-
-
         }
 
        console.log(midi)
 
 }
 function string_parse(cuerda, cuerdas) {
-     for (var i = 0; i < cuerdas.length; i++) {
+     for (let i = 0; i < cuerdas.length; i++) {
 
           if (cuerda === cuerdas[i]) {
               cuerda = i + 1
