@@ -1,4 +1,4 @@
-
+const tab_notes = MidiConvert.load("midis/Picados.mid")
 const frets = {
     E: {
         'E3': "6_0",
@@ -148,7 +148,6 @@ function fretboard_draw(event, last){
 
     cuerdas.forEach(function(cuerda) {
         if (event.string === cuerda) {
-            console.log(cuerda)
             for (let note in frets[cuerda]) {
                 if (event.name === note || event.instrument === note) {
                     let fretSelected = frets[cuerda][currentEvent.name];
@@ -170,25 +169,28 @@ function fretboard_draw(event, last){
     })
 }
 
-function draw_tab(tab_notes, note_counter){
+function draw_current_note(index) {
+    let current = document.getElementsByTagName('text')[index];
+    let last = document.getElementsByTagName('text')[index -1];
 
-     console.log(tab_notes)
-/*
-     tab_notes[note_counter].setStyle({fillStyle: "red", strokeStyle: "blue"});
-*/
-
-
+    $(current).css("fill", "red");
+    $(last).css("fill", "black");
 }
-let lastEvent = null;
-let note_counter = 1;
-function playNote(time, event) {
+
+let lastEvent = null
+let note_counter = 1
+let svg_text_index = 0
+function playNote(time, event, context,stave) {
 
 
     synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
     fretboard_draw(event, lastEvent);
-    
+    draw_current_note(svg_text_index)
+
+
     lastEvent = event;
     note_counter +=1;
+    svg_text_index +=1;
 
 }
 //acciona el midi con el boton "play" y empieza el transport
@@ -203,7 +205,10 @@ button.addEventListener("click ", function() {
         Tone.Transport.start("+0.1 ", 0);
 
     }
+
+
 });
+
 
 //cambia el midi segun lo que se escoja en el select
 function currentSong(){
@@ -226,7 +231,8 @@ function currentSong(){
 }
 
 
-let tab_notes= MidiConvert.load("midis/Picados.mid").then(function(midi) {
+
+    tab_notes.then(function(midi) {
 
 
 
@@ -253,69 +259,54 @@ let tab_notes= MidiConvert.load("midis/Picados.mid").then(function(midi) {
 
     fret_to_miditrack(midi)
     tab_parser(midi)
-   let draw_notes = create_tab(midi)
-     return draw_notes
+    create_tab(midi)
+
+
+
 });
-console.log(tab_notes)
+
 
 function create_tab(midi) {
 
     VF = Vex.Flow;
 
     var div = document.getElementById("mySVGDiv")
-    var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-
+    const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
     renderer.resize(4000, 200);
-
-    var context = renderer.getContext();
-
-    let stave = new VF.TabStave(10, 40, 800);
-
+    const context = renderer.getContext();
+    const stave = new VF.TabStave(10, 40, 800);
     stave.addClef("tab").setContext(context).draw();
-
-
     let draw_notes = []
     let sort_notes = []
     let sort_notes_arr = []
-
 
     for (let i = 1; i < midi.tracks.length; ++i) {
         let notes = midi.tracks[i].notes
         sort_notes.push(notes)
     }
-
     for (let i = 0; i < sort_notes.length; ++i) {
-
         let notes = sort_notes[i]
-
         notes.forEach(function (note) {
              sort_notes_arr.push(note)
         })
-
-
     }
-
-    
-
     sort_notes_arr.sort(function(a, b) {
-
         return a.time - b.time;
     });
-
         sort_notes_arr.forEach(function(note) {
-
             draw_notes.push(new VF.TabNote({
                 positions: [{str: note.cuerda_parsed, fret: note.fret_parsed}],
                 duration: note.music_duration,
-                time: note.time
+                time: note.time,
 
-            }))
+            }
+            ))
 
         })
-    
+
      VF.Formatter.FormatAndDraw(context, stave, draw_notes);
-        console.log(draw_notes)
-    return draw_notes
+return draw_notes
+
 }
 
 function tab_parser(midi){
