@@ -184,7 +184,7 @@ function playNote(time, event) {
     svg_text_index +=1
 }
 //acciona el midi con el boton "play" y empieza el transport
-var button = document.getElementById("play");
+let button = document.getElementById("play");
 button.addEventListener("click ", function() {
 
     if (Tone.Transport.state === "started ") {
@@ -197,18 +197,18 @@ button.addEventListener("click ", function() {
 
 //cambia el midi segun lo que se escoja en el select
 function currentSong(){
-    var currentMidi= ["buleria_Aflaco.mid","Picado_Tango_A_F.mid","buleria_Aflaco.mid.mid"];
-    var selects = document.getElementById("currentMidi");
-    var selectedValue = selects.options[selects.selectedIndex].value;
+    let currentMidi= ["buleria_Aflaco.mid","Picado_Tango_A_F.mid","buleria_Aflaco.mid.mid"];
+    let selects = document.getElementById("currentMidi");
+    let selectedValue = selects.options[selects.selectedIndex].value;
     MidiConvert.load("midis/" + currentMidi[selectedValue]).then(function(midi) {
 
         console.log(midi.tracks[0].name);
-        var melody = midi.get(midi.tracks[0].name).notes;
+        let melody = midi.get(midi.tracks[0].name).notes;
         console.log(melody);
         // make sure you set the tempo before you schedule the events
         Tone.Transport.bpm.value = midi.bpm;
         Tone.Transport.timeSignature = midi.timeSignature;
-        var currentPicado = new Tone.Part(playNote, melody).start(0);
+        let currentPicado = new Tone.Part(playNote, melody).start(0);
 
     });
 }
@@ -218,10 +218,10 @@ let notes = ["E","A","D","G","B","e"]
 Tone.Transport.bpm.value = midi.bpm;
 Tone.Transport.timeSignature = midi.timeSignature;
 
- for (var i= 0 ; i<midi.tracks.length; ++i){
+ for (let i= 0 ; i<midi.tracks.length; ++i){
      notes.forEach(function (nota) {
          if (midi.tracks[i].name===nota || midi.tracks[i].instrument===nota){
-             var track= midi.tracks[i].notes
+             let track= midi.tracks[i].notes
              new Tone.Part(playNote, track).start(0);
              track.forEach(function(note){
                  note.string = nota
