@@ -106,8 +106,6 @@ const durations={
         "32d":0.09372,
         "64":0.03125,
         "64d":0.046875,
-
-
     },
     "60":{
         "w":4.000 ,
@@ -123,8 +121,6 @@ const durations={
         "32d":0.1875,
         "64":0.0625,
         "64d":0.03125,
-
-
     }
 }
 const synth = new Tone.PolySynth(8, Tone.Synth, {
@@ -172,43 +168,30 @@ function fretboard_draw(event, last){
 function draw_current_note(index) {
     let current = document.getElementsByTagName('text')[index];
     let last = document.getElementsByTagName('text')[index -1];
-
     $(current).css("fill", "red");
     $(last).css("fill", "black");
 }
 
 let lastEvent = null
-let note_counter = 1
 let svg_text_index = 0
-function playNote(time, event, context,stave) {
-
+function playNote(time, event) {
     Tone.context.resume().then(() => {
         synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
-    });
-
-    fretboard_draw(event, lastEvent);
+    })
+    fretboard_draw(event, lastEvent)
     draw_current_note(svg_text_index)
-
-
-    lastEvent = event;
-    note_counter +=1;
-    svg_text_index +=1;
-
+    lastEvent = event
+    svg_text_index +=1
 }
 //acciona el midi con el boton "play" y empieza el transport
 var button = document.getElementById("play");
 button.addEventListener("click ", function() {
 
-
     if (Tone.Transport.state === "started ") {
         Tone.Transport.stop();
-
     } else {
         Tone.Transport.start("+0.1 ", 0);
-
     }
-
-
 });
 
 
@@ -228,21 +211,12 @@ function currentSong(){
         var currentPicado = new Tone.Part(playNote, melody).start(0);
 
     });
-
-    console.log(currentMidi[selectedValue])
 }
+tab_notes.then(function(midi) {
 
-
-
-    tab_notes.then(function(midi) {
-
-
-
-    let notes = ["E","A","D","G","B","e"]
-
-    Tone.Transport.bpm.value = midi.bpm;
-    Tone.Transport.timeSignature = midi.timeSignature;
-
+let notes = ["E","A","D","G","B","e"]
+Tone.Transport.bpm.value = midi.bpm;
+Tone.Transport.timeSignature = midi.timeSignature;
 
  for (var i= 0 ; i<midi.tracks.length; ++i){
      notes.forEach(function (nota) {
@@ -251,32 +225,24 @@ function currentSong(){
              new Tone.Part(playNote, track).start(0);
              track.forEach(function(note){
                  note.string = nota
-
              })
          }
-
      })
-
  }
-
-    fret_to_miditrack(midi)
-    tab_parser(midi)
-    create_tab(midi)
-
-
-
-});
-
+fret_to_miditrack(midi)
+tab_parser(midi)
+create_tab(midi)
+})
 
 function create_tab(midi) {
 
     VF = Vex.Flow;
 
-    var div = document.getElementById("mySVGDiv")
+    let div = document.getElementById("mySVGDiv")
     const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
     renderer.resize(4000, 200);
-    const context = renderer.getContext();
-    const stave = new VF.TabStave(10, 40, 800);
+    let context = renderer.getContext();
+    let stave = new VF.TabStave(10, 40, 800);
     stave.addClef("tab").setContext(context).draw();
     let draw_notes = []
     let sort_notes = []
@@ -312,29 +278,18 @@ return draw_notes
 }
 
 function tab_parser(midi){
-
-
-        for (let i = 1; i < midi.tracks.length; ++i) {
-            let notes = midi.tracks[i].notes
-            for (let note in notes) {
-                let cuerda = notes[note]["string"]
-                let cuerdas = ["e", "B", "G", "D", "A", "E"]
-
-
-                notes[note]["cuerda_parsed"] = string_parse(cuerda, cuerdas)
-
-                notes[note]["fret_parsed"] = parseInt(notes[note]["fret"])
-
-            }
-
+    for (let i = 1; i < midi.tracks.length; ++i) {
+        let notes = midi.tracks[i].notes
+        for (let note in notes) {
+            let cuerda = notes[note]["string"]
+            let cuerdas = ["e", "B", "G", "D", "A", "E"]
+            notes[note]["cuerda_parsed"] = string_parse(cuerda, cuerdas)
+            notes[note]["fret_parsed"] = parseInt(notes[note]["fret"])
         }
-
-       console.log(midi)
-
+    }
 }
 function string_parse(cuerda, cuerdas) {
      for (let i = 0; i < cuerdas.length; i++) {
-
           if (cuerda === cuerdas[i]) {
               cuerda = i + 1
           }
@@ -364,9 +319,7 @@ function duration_parser(midi){
         let track = midi.tracks[i].notes
         if(midi.header.bpm===120){
             track.forEach(function (nota) {
-
                 for (let duration in durations["120"]){
-
                 if ( durations["120"][duration] + 0.010 >= nota.duration && nota.duration >= durations["120"][duration] - 0.010){
                     nota.music_duration= duration
                 }
