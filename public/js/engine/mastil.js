@@ -182,8 +182,10 @@ let note_counter = 1
 let svg_text_index = 0
 function playNote(time, event, context,stave) {
 
+    Tone.context.resume().then(() => {
+        synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
+    });
 
-    synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
     fretboard_draw(event, lastEvent);
     draw_current_note(svg_text_index)
 
