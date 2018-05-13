@@ -1,4 +1,7 @@
-const tab_notes = MidiConvert.load("midis/Picados.mid")
+const tab_notes = MidiConvert.load("midis/buleria_3.mid")
+const test_notes = MidiConvert.load("midis/mc_v3.mid")
+
+
 const frets = {
     E: {
         'E3': "6_0",
@@ -102,6 +105,7 @@ const durations={
         "8d":0.375,
         "16":0.125,
         "16d":0.1875,
+        "16d":0.1625,
         "32":0.0625,
         "32d":0.09372,
         "64":0.03125,
@@ -229,11 +233,15 @@ Tone.Transport.timeSignature = midi.timeSignature;
          }
      })
  }
-fret_to_miditrack(midi)
-tab_parser(midi)
-create_tab(midi)
-})
 
+fret_to_miditrack(midi)
+    console.log(midi)
+tab_parser(midi)
+    console.log(midi)
+create_tab(midi)
+    console.log(midi)
+})
+console.log(test_notes)
 function create_tab(midi) {
 
     VF = Vex.Flow;
@@ -242,7 +250,7 @@ function create_tab(midi) {
     const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
     renderer.resize(4000, 200);
     let context = renderer.getContext();
-    let stave = new VF.TabStave(10, 40, 800);
+    let stave = new VF.TabStave(10, 40, 1000);
     stave.addClef("tab").setContext(context).draw();
     let draw_notes = []
     let sort_notes = []
