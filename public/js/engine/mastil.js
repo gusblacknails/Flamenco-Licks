@@ -1,4 +1,4 @@
-const tab_notes = MidiConvert.load("midis/buleria_3.mid")
+const tab_notes = MidiConvert.load("midis/bulerias_5.mid")
 const test_notes = MidiConvert.load("midis/mc_v3.mid")
 
 
@@ -173,19 +173,27 @@ function draw_current_note(index) {
     let current = document.getElementsByTagName('text')[index];
     let last = document.getElementsByTagName('text')[index -1];
     $(current).css("fill", "red");
-    $(last).css("fill", "black");
+    $(current).css('stroke', 'yellow');
+    $(current).css('stroke-width', '15px');
+    $(current).css('stroke-opacity', '0.1');
+    $(last).css("fill", "black")
+
+    $(last).css('stroke-opacity', '0');
+
 }
 
 let lastEvent = null
 let svg_text_index = 0
+
 function playNote(time, event) {
     Tone.context.resume().then(() => {
         synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
+        fretboard_draw(event, lastEvent)
+        draw_current_note(svg_text_index)
+        lastEvent = event
+        svg_text_index +=1
     })
-    fretboard_draw(event, lastEvent)
-    draw_current_note(svg_text_index)
-    lastEvent = event
-    svg_text_index +=1
+
 }
 //acciona el midi con el boton "play" y empieza el transport
 let button = document.getElementById("play");
@@ -221,17 +229,43 @@ tab_notes.then(function(midi) {
 let notes = ["E","A","D","G","B","e"]
 Tone.Transport.bpm.value = midi.bpm;
 Tone.Transport.timeSignature = midi.timeSignature;
+Tone.Transport.loop =true;
+Tone.Transport.loopStart =0;
 
- for (let i= 0 ; i<midi.tracks.length; ++i){
+console.log(midi)
+
+let loop_notes = [];
+    for (let i= 0 ; i<midi.tracks.length; ++i){
      notes.forEach(function (nota) {
+
          if (midi.tracks[i].name===nota || midi.tracks[i].instrument===nota){
              let track= midi.tracks[i].notes
              new Tone.Part(playNote, track).start(0);
              track.forEach(function(note){
                  note.string = nota
+                 loop_notes.push(note.time)
+
              })
-         }
-     })
+
+             }
+
+
+     }
+
+     )
+
+
+        console.log(loop_notes)
+        let max_time = 0;
+        loop_notes.forEach(function(note){
+            if (note > max_time){
+                max_time = note
+            }
+
+        })
+        console.log(max_time)
+        Tone.Transport.loopEnd =max_time;
+
  }
 
 fret_to_miditrack(midi)
