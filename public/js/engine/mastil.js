@@ -1,4 +1,4 @@
-const tab_notes = MidiConvert.load("midis/bulerias_5.mid")
+const tab_notes = MidiConvert.load("midis/Picados.mid")
 const test_notes = MidiConvert.load("midis/mc_v3.mid")
 
 
@@ -172,6 +172,10 @@ function fretboard_draw(event, last){
 function draw_current_note(index) {
     let current = document.getElementsByTagName('text')[index];
     let last = document.getElementsByTagName('text')[index -1];
+    if (index ==  0){
+        $(last).css("fill", "black")
+        $(last).css('stroke-opacity', '0');
+    }
     $(current).css("fill", "red");
     $(current).css('stroke', 'yellow');
     $(current).css('stroke-width', '15px');
@@ -182,17 +186,28 @@ function draw_current_note(index) {
 
 }
 
-let lastEvent = null
-let svg_text_index = 0
+let lastEvent = null;
+let svg_text_index = 0;
 
 function playNote(time, event) {
     Tone.context.resume().then(() => {
+
+
         synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
-        fretboard_draw(event, lastEvent)
-        draw_current_note(svg_text_index)
-        lastEvent = event
-        svg_text_index +=1
-    })
+        draw_current_note(svg_text_index);
+        fretboard_draw(event, lastEvent);
+        lastEvent = event;
+        svg_text_index +=1;
+        if (Tone.Transport.progress < 0.009){
+            svg_text_index = 1;
+            let first = document.getElementsByTagName('text')[0];
+            $(first).css("fill", "red");
+            $(first).css('stroke', 'yellow');
+            $(first).css('stroke-width', '15px');
+            $(first).css('stroke-opacity', '0.1');
+        }
+    }
+    )
 
 }
 //acciona el midi con el boton "play" y empieza el transport
@@ -232,30 +247,19 @@ Tone.Transport.timeSignature = midi.timeSignature;
 Tone.Transport.loop =true;
 Tone.Transport.loopStart =0;
 
-console.log(midi)
-
 let loop_notes = [];
     for (let i= 0 ; i<midi.tracks.length; ++i){
      notes.forEach(function (nota) {
 
          if (midi.tracks[i].name===nota || midi.tracks[i].instrument===nota){
-             let track= midi.tracks[i].notes
+             let track= midi.tracks[i].notes;
              new Tone.Part(playNote, track).start(0);
              track.forEach(function(note){
-                 note.string = nota
+                 note.string = nota;
                  loop_notes.push(note.time)
-
              })
-
-             }
-
-
-     }
-
+         }}
      )
-
-
-        console.log(loop_notes)
         let max_time = 0;
         loop_notes.forEach(function(note){
             if (note > max_time){
@@ -263,19 +267,14 @@ let loop_notes = [];
             }
 
         })
-        console.log(max_time)
-        Tone.Transport.loopEnd =max_time;
 
+        Tone.Transport.loopEnd =max_time + 1;
  }
 
-fret_to_miditrack(midi)
-    console.log(midi)
-tab_parser(midi)
-    console.log(midi)
-create_tab(midi)
-    console.log(midi)
+fret_to_miditrack(midi);
+tab_parser(midi);
+create_tab(midi);
 })
-console.log(test_notes)
 function create_tab(midi) {
 
     VF = Vex.Flow;
@@ -318,7 +317,6 @@ function create_tab(midi) {
 return draw_notes
 
 }
-
 function tab_parser(midi){
     for (let i = 1; i < midi.tracks.length; ++i) {
         let notes = midi.tracks[i].notes
