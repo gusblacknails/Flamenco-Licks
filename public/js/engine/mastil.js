@@ -1,4 +1,4 @@
-const tab_notes = MidiConvert.load("midis/Picados.mid")
+const tab_notes = MidiConvert.load("midis/bulerias_5.mid")
 const test_notes = MidiConvert.load("midis/mc_v3.mid")
 
 
@@ -126,7 +126,8 @@ const durations={
         "64":0.0625,
         "64d":0.03125,
     }
-}
+};
+let reverb = new Tone.JCReverb(0.6).connect(Tone.Master);
 const synth = new Tone.PolySynth(8, Tone.Synth, {
     "oscillator ": {
         "type ": "sine3 "
@@ -138,6 +139,25 @@ const synth = new Tone.PolySynth(8, Tone.Synth, {
         "release ": 0.6
     }
 }).toMaster();
+const sampler = new Tone.Sampler({
+    "E3" : "guitar/E2.mp3",
+    "G3" : "guitar/G2.mp3",
+    "A#3" : "guitar/Asharp2.mp3",
+    "C#4" : "guitar/Csharp3.mp3",
+    "E4" : "guitar/E3.mp3",
+    "G4" : "guitar/G3.mp3",
+    "A#4" : "guitar/Asharp3.mp3",
+    "C#5" : "guitar/Csharp4.mp3",
+    "E5" : "guitar/E4.mp3",
+    "G5" : "guitar/G4.mp3",
+    "A#5" : "guitar/Asharp4.mp3",
+    "C#6" : "guitar/Csharp4.mp3",
+    "E6" : "guitar/E5.mp3",
+}).chain(reverb);
+
+
+let lastEvent = null;
+let svg_text_index = 0;
 
 function fretboard_draw(event, last){
     const cuerdas = ["E","A","D","G","B","e"];
@@ -168,7 +188,9 @@ function fretboard_draw(event, last){
         }
     })
 }
+function clean_fretboard (){
 
+}
 function draw_current_note(index) {
     let current = document.getElementsByTagName('text')[index];
     let last = document.getElementsByTagName('text')[index -1];
@@ -177,51 +199,43 @@ function draw_current_note(index) {
         $(last).css('stroke-opacity', '0');
     }
     $(current).css("fill", "red");
-    $(current).css('stroke', 'yellow');
-    $(current).css('stroke-width', '15px');
+    $(current).css('stroke', 'red');
+    $(current).css('stroke-width', '6px');
     $(current).css('stroke-opacity', '0.1');
-    $(last).css("fill", "black")
-
+    $(last).css("fill", "black");
     $(last).css('stroke-opacity', '0');
-
 }
-
-let lastEvent = null;
-let svg_text_index = 0;
-
 function playNote(time, event) {
     Tone.context.resume().then(() => {
+/*
+            synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
+*/
+            sampler.triggerAttackRelease(event.name, event.duration );
+            draw_current_note(svg_text_index);
+            fretboard_draw(event, lastEvent);
+            lastEvent = event;
 
-
-        synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
-        draw_current_note(svg_text_index);
-        fretboard_draw(event, lastEvent);
-        lastEvent = event;
-        svg_text_index +=1;
-        if (Tone.Transport.progress < 0.009){
-            svg_text_index = 1;
-            let first = document.getElementsByTagName('text')[0];
-            $(first).css("fill", "red");
-            $(first).css('stroke', 'yellow');
-            $(first).css('stroke-width', '15px');
-            $(first).css('stroke-opacity', '0.1');
+            svg_text_index +=1;
+            if (Tone.Transport.progress < 0.009){
+                svg_text_index = 1;
+                let first = document.getElementsByTagName('text')[0];
+                $(first).css("fill", "red");
+                $(first).css('stroke', 'red');
+                $(first).css('stroke-width', '6px');
+                $(first).css('stroke-opacity', '0.1');
+            }
         }
-    }
     )
 
 }
-//acciona el midi con el boton "play" y empieza el transport
 let button = document.getElementById("play");
 button.addEventListener("click ", function() {
-
-    if (Tone.Transport.state === "started ") {
+    if (Tone.Transport.state === "started") {
         Tone.Transport.stop();
     } else {
         Tone.Transport.start("+0.1 ", 0);
     }
 });
-
-
 //cambia el midi segun lo que se escoja en el select
 function currentSong(){
     let currentMidi= ["buleria_Aflaco.mid","Picado_Tango_A_F.mid","buleria_Aflaco.mid.mid"];
@@ -241,25 +255,25 @@ function currentSong(){
 }
 tab_notes.then(function(midi) {
 
-let notes = ["E","A","D","G","B","e"]
-Tone.Transport.bpm.value = midi.bpm;
-Tone.Transport.timeSignature = midi.timeSignature;
-Tone.Transport.loop =true;
-Tone.Transport.loopStart =0;
+    let notes = ["E","A","D","G","B","e"]
+    Tone.Transport.bpm.value = midi.bpm;
+    Tone.Transport.timeSignature = midi.timeSignature;
+    Tone.Transport.loop =true;
+    Tone.Transport.loopStart =0;
 
-let loop_notes = [];
+    let loop_notes = [];
     for (let i= 0 ; i<midi.tracks.length; ++i){
-     notes.forEach(function (nota) {
+        notes.forEach(function (nota) {
 
-         if (midi.tracks[i].name===nota || midi.tracks[i].instrument===nota){
-             let track= midi.tracks[i].notes;
-             new Tone.Part(playNote, track).start(0);
-             track.forEach(function(note){
-                 note.string = nota;
-                 loop_notes.push(note.time)
-             })
-         }}
-     )
+            if (midi.tracks[i].name===nota || midi.tracks[i].instrument===nota){
+                let track= midi.tracks[i].notes;
+                new Tone.Part(playNote, track).start(0);
+                track.forEach(function(note){
+                    note.string = nota;
+                    loop_notes.push(note.time)
+                })
+            }}
+        )
         let max_time = 0;
         loop_notes.forEach(function(note){
             if (note > max_time){
@@ -267,13 +281,12 @@ let loop_notes = [];
             }
 
         })
-
         Tone.Transport.loopEnd =max_time + 1;
- }
+    }
 
-fret_to_miditrack(midi);
-tab_parser(midi);
-create_tab(midi);
+    fret_to_miditrack(midi);
+    tab_parser(midi);
+    create_tab(midi);
 })
 function create_tab(midi) {
 
@@ -296,25 +309,25 @@ function create_tab(midi) {
     for (let i = 0; i < sort_notes.length; ++i) {
         let notes = sort_notes[i]
         notes.forEach(function (note) {
-             sort_notes_arr.push(note)
+            sort_notes_arr.push(note)
         })
     }
     sort_notes_arr.sort(function(a, b) {
         return a.time - b.time;
     });
-        sort_notes_arr.forEach(function(note) {
-            draw_notes.push(new VF.TabNote({
+    sort_notes_arr.forEach(function(note) {
+        draw_notes.push(new VF.TabNote({
                 positions: [{str: note.cuerda_parsed, fret: note.fret_parsed}],
                 duration: note.music_duration,
                 time: note.time,
 
             }
-            ))
+        ))
 
-        })
+    })
 
-     VF.Formatter.FormatAndDraw(context, stave, draw_notes);
-return draw_notes
+    VF.Formatter.FormatAndDraw(context, stave, draw_notes);
+    return draw_notes
 
 }
 function tab_parser(midi){
@@ -329,12 +342,12 @@ function tab_parser(midi){
     }
 }
 function string_parse(cuerda, cuerdas) {
-     for (let i = 0; i < cuerdas.length; i++) {
-          if (cuerda === cuerdas[i]) {
-              cuerda = i + 1
-          }
-     }
-     return cuerda
+    for (let i = 0; i < cuerdas.length; i++) {
+        if (cuerda === cuerdas[i]) {
+            cuerda = i + 1
+        }
+    }
+    return cuerda
 }
 function fret_to_miditrack(midi){
     for (let i= 0 ; i<midi.tracks.length; ++i){
@@ -360,9 +373,9 @@ function duration_parser(midi){
         if(midi.header.bpm===120){
             track.forEach(function (nota) {
                 for (let duration in durations["120"]){
-                if ( durations["120"][duration] + 0.010 >= nota.duration && nota.duration >= durations["120"][duration] - 0.010){
-                    nota.music_duration= duration
-                }
+                    if ( durations["120"][duration] + 0.010 >= nota.duration && nota.duration >= durations["120"][duration] - 0.010){
+                        nota.music_duration= duration
+                    }
                 }
             })
         }
