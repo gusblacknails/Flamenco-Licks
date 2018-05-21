@@ -1,4 +1,4 @@
-const tab_notes = MidiConvert.load("midis/Picados.mid")
+const tab_notes = MidiConvert.load("midis/buleria_01.mid")
 const test_notes = MidiConvert.load("midis/mc_v3.mid")
 
 
@@ -151,7 +151,7 @@ const sampler = new Tone.Sampler({
     "E5" : "guitar/E4.mp3",
     "G5" : "guitar/G4.mp3",
     "A#5" : "guitar/Asharp4.mp3",
-    "C#6" : "guitar/Csharp4.mp3",
+    "C#6" : "guitar/Csharp5.mp3",
     "E6" : "guitar/E5.mp3",
 }).chain(reverb);
 
