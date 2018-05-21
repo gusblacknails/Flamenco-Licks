@@ -1,4 +1,4 @@
-const tab_notes = MidiConvert.load("midis/bulerias_5.mid")
+const tab_notes = MidiConvert.load("midis/Picados.mid")
 const test_notes = MidiConvert.load("midis/mc_v3.mid")
 
 
@@ -127,7 +127,7 @@ const durations={
         "64d":0.03125,
     }
 };
-let reverb = new Tone.JCReverb(0.6).connect(Tone.Master);
+let reverb = new Tone.JCReverb(0.3).connect(Tone.Master);
 const synth = new Tone.PolySynth(8, Tone.Synth, {
     "oscillator ": {
         "type ": "sine3 "
@@ -210,7 +210,7 @@ function playNote(time, event) {
 /*
             synth.triggerAttackRelease(event.name, event.duration, time, event.velocity);
 */
-            sampler.triggerAttackRelease(event.name, event.duration );
+            sampler.triggerAttackRelease(event.name, event.duration +0.1 , time);
             draw_current_note(svg_text_index);
             fretboard_draw(event, lastEvent);
             lastEvent = event;
