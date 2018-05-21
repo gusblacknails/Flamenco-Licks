@@ -238,7 +238,7 @@ button.addEventListener("click ", function() {
 });
 //cambia el midi segun lo que se escoja en el select
 function currentSong(){
-    let currentMidi= ["buleria_Aflaco.mid","Picado_Tango_A_F.mid","buleria_Aflaco.mid.mid"];
+    let currentMidi= [];
     let selects = document.getElementById("currentMidi");
     let selectedValue = selects.options[selects.selectedIndex].value;
     MidiConvert.load("midis/" + currentMidi[selectedValue]).then(function(midi) {
