@@ -1,7 +1,6 @@
-const tab_notes = MidiConvert.load("midis/buleria_01.mid")
-const test_notes = MidiConvert.load("midis/mc_v3.mid")
-
-
+const tab_notes = MidiConvert.load("midis/bulerias_cadiz_09.mid")
+let midi_test = MidiConvert.load("midis/Django.mid")
+console.log(midi_test)
 const frets = {
     E: {
         'E3': "6_0",
@@ -155,11 +154,11 @@ const sampler = new Tone.Sampler({
     "E6" : "guitar/E5.mp3",
 }).chain(reverb);
 
-
 let lastEvent = null;
 let svg_text_index = 0;
 
 function fretboard_draw(event, last){
+    console.error(event)
     const cuerdas = ["E","A","D","G","B","e"];
     let currentEvent = event;
     let lastEvent = last || "event" + currentEvent;
@@ -182,6 +181,7 @@ function fretboard_draw(event, last){
                     Tone.Draw.schedule(function () {
                         document.getElementById(fretSelected).src = currentImage;
                         document.getElementById(lastfretSelected).src = pointImage;
+                        console.log(fretSelected)
                     })
                 }
             }
@@ -315,16 +315,35 @@ function create_tab(midi) {
     sort_notes_arr.sort(function(a, b) {
         return a.time - b.time;
     });
-    sort_notes_arr.forEach(function(note) {
-        draw_notes.push(new VF.TabNote({
-                positions: [{str: note.cuerda_parsed, fret: note.fret_parsed}],
-                duration: note.music_duration,
-                time: note.time,
 
+    let lastNote = sort_notes_arr[0];
+    let duplicate_notes = [];
+    for (let i = 0 ; i <= sort_notes_arr.length -1; ++i) {
+        if (sort_notes_arr[i].time === lastNote.time && lastNote != sort_notes_arr[0]) {
+            duplicate_notes.push(i)
+        }
+        lastNote = sort_notes_arr[i]
+    }
+    console.log(duplicate_notes)
+    for (let i = 0 ; i <= sort_notes_arr.length -1; ++i) {
+        duplicate_notes.forEach(function(note){
+            if (note == i){
+                draw_notes.push(new VF.TabNote({
+                    positions: [{str: sort_notes_arr[i].cuerda_parsed, fret: sort_notes_arr[i].fret_parsed},
+                        {str: sort_notes_arr[i -1].cuerda_parsed, fret: sort_notes_arr[i -1].fret_parsed}],
+                    duration: sort_notes_arr[i].music_duration,
+                    time: sort_notes_arr[i].time,
+                }))
+                draw_notes.splice(i -1, 1);
+                console.error("split")
             }
-        ))
-
-    })
+        })
+        draw_notes.push(new VF.TabNote({
+            positions: [{str: sort_notes_arr[i].cuerda_parsed, fret: sort_notes_arr[i].fret_parsed}],
+            duration: sort_notes_arr[i].music_duration,
+            time: sort_notes_arr[i].time,
+        }))
+    }
 
     VF.Formatter.FormatAndDraw(context, stave, draw_notes);
     return draw_notes
@@ -357,7 +376,7 @@ function fret_to_miditrack(midi){
                 if (nota.string===fret){
                     for  (let note in fret){
                         if (frets[fret][nota.name]){
-                            nota.fret= frets[fret][nota.name].slice(2,3)
+                            nota.fret= frets[fret][nota.name].slice(2,4)
                         }
                     }
                 }
