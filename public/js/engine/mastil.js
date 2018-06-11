@@ -1,4 +1,6 @@
-const tab_notes = MidiConvert.load("midis/bulerias_cadiz_09.mid")
+
+
+let tab_notes = MidiConvert.load("midis/bulerias_cadiz_09_v2.mid")
 let midi_test = MidiConvert.load("midis/Django.mid")
 console.log(midi_test)
 const frets = {
@@ -289,7 +291,14 @@ tab_notes.then(function(midi) {
     create_tab(midi);
 })
 function create_tab(midi) {
-
+    const string_values= {
+        'e': 1,
+        'B': 2,
+        'G': 3,
+        'D': 4,
+        'A': 5,
+        'E': 6,
+    }
     VF = Vex.Flow;
 
     let div = document.getElementById("mySVGDiv")
@@ -315,38 +324,156 @@ function create_tab(midi) {
     sort_notes_arr.sort(function(a, b) {
         return a.time - b.time;
     });
-
+    console.log(sort_notes_arr)
     let lastNote = sort_notes_arr[0];
     let duplicate_notes = [];
-    for (let i = 0 ; i <= sort_notes_arr.length -1; ++i) {
-        if (sort_notes_arr[i].time === lastNote.time && lastNote != sort_notes_arr[0]) {
-            duplicate_notes.push(i)
-        }
-        lastNote = sort_notes_arr[i]
-    }
-    console.log(duplicate_notes)
-    for (let i = 0 ; i <= sort_notes_arr.length -1; ++i) {
-        duplicate_notes.forEach(function(note){
-            if (note == i){
-                draw_notes.push(new VF.TabNote({
-                    positions: [{str: sort_notes_arr[i].cuerda_parsed, fret: sort_notes_arr[i].fret_parsed},
-                        {str: sort_notes_arr[i -1].cuerda_parsed, fret: sort_notes_arr[i -1].fret_parsed}],
-                    duration: sort_notes_arr[i].music_duration,
-                    time: sort_notes_arr[i].time,
-                }))
-                draw_notes.splice(i -1, 1);
-                console.error("split")
-            }
-        })
-        draw_notes.push(new VF.TabNote({
-            positions: [{str: sort_notes_arr[i].cuerda_parsed, fret: sort_notes_arr[i].fret_parsed}],
-            duration: sort_notes_arr[i].music_duration,
-            time: sort_notes_arr[i].time,
-        }))
-    }
 
+        let firstNote = true
+        for (let i = 0 ; i <= sort_notes_arr.length -1; ++i) {
+
+            if (sort_notes_arr[i].time === lastNote.time && lastNote != sort_notes_arr[0]) {
+                if (firstNote) {
+                    duplicate_notes[i] = ( [[{
+                        str: lastNote.cuerda_parsed,
+                        fret: lastNote.fret_parsed
+                    }, {
+                        str: sort_notes_arr[i].cuerda_parsed,
+                        fret: sort_notes_arr[i].fret_parsed
+                    }], {duration: sort_notes_arr[i].music_duration, time: sort_notes_arr[i].time}])
+                    firstNote = false
+                }
+                else {
+
+                    duplicate_notes[i -1][0].push({
+                        str: sort_notes_arr[i].cuerda_parsed,
+                        fret: sort_notes_arr[i].fret_parsed
+                    }
+                    )
+                    firstNote = true
+                }
+
+            }
+
+            lastNote = sort_notes_arr[i] }
+
+    for (let i = 0 ; i <= sort_notes_arr.length -1; ++i) {
+
+            if (duplicate_notes[i]){
+                if (duplicate_notes[i][0].length=== 2){
+                    console.error('dos', duplicate_notes[i])
+                  /*  console.log(note[0][1]['str'])*/
+                    draw_notes.push(
+
+                        new VF.TabNote({
+                            positions: [
+                                {
+                                    str: duplicate_notes[i][0][0]['str'],
+                                    fret: duplicate_notes[i][0][0]['fret']
+                                },
+                                {
+                                    str: duplicate_notes[i][0][1]['str'],
+                                    fret: duplicate_notes[i][0][1]['fret']
+                                }
+
+                            ],
+                            duration: sort_notes_arr[i].music_duration,
+                            time: sort_notes_arr[i].time,
+                        })
+
+                    )
+                   /* i += 1*/
+
+
+                }
+                if (duplicate_notes[i][0].length=== 3){
+                    console.error('tres' ,duplicate_notes[i])
+                    draw_notes.push(
+
+                        new VF.TabNote({
+                            positions: [
+                                {
+                                    str: duplicate_notes[i][0][0]['str'],
+                                    fret: duplicate_notes[i][0][0]['fret']
+                                },
+                                {
+                                    str: duplicate_notes[i][0][1]['str'],
+                                    fret: duplicate_notes[i][0][1]['fret']
+                                },
+                                {
+                                    str: duplicate_notes[i][0][2]['str'],
+                                    fret: duplicate_notes[i][0][2]['fret']
+                                }
+
+
+                            ],
+                            duration: sort_notes_arr[i].music_duration,
+                            time: sort_notes_arr[i].time,
+                        })
+
+                    )
+                   /* i += 2*/
+
+                }
+                if (duplicate_notes[i][0].length=== 4){
+                    console.error('cuatro', duplicate_notes[i])
+                    draw_notes.push(
+
+                        new VF.TabNote({
+                            positions: [
+                                {
+                                    str: duplicate_notes[i][0][0]['str'],
+                                    fret: duplicate_notes[i][0][0]['fret']
+                                },
+                                {
+                                    str: duplicate_notes[i][0][1]['str'],
+                                    fret: duplicate_notes[i][0][1]['fret']
+                                },
+                                {
+                                    str: duplicate_notes[i][0][2]['str'],
+                                    fret: duplicate_notes[i][0][2]['fret']
+                                },
+                                {
+                                    str: duplicate_notes[i][0][3]['str'],
+                                    fret: duplicate_notes[i][0][3]['fret']
+                                }
+
+
+                            ],
+                            duration: sort_notes_arr[i].music_duration,
+                            time: sort_notes_arr[i].time,
+                        })
+
+                    )
+                  /*  i += 3*/
+
+                }
+
+
+            }
+
+        else {
+                draw_notes.push(
+
+                    new VF.TabNote({
+                        positions: [
+                            {
+                                str: sort_notes_arr[i].cuerda_parsed,
+                                fret: sort_notes_arr[i].fret_parsed
+                            }
+                        ],
+                        duration: sort_notes_arr[i].music_duration,
+                        time: sort_notes_arr[i].time,
+                    })
+
+                )
+            }
+
+
+    console.log(i)
+    }
+    console.error(draw_notes)
     VF.Formatter.FormatAndDraw(context, stave, draw_notes);
-    return draw_notes
+
 
 }
 function tab_parser(midi){
