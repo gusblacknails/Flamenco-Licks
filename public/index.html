@@ -6,6 +6,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Flamenco Guitar Licks</title>
     <link rel="stylesheet" href="/css/multiDrum.css">
+    <link rel="stylesheet" href="/css/tablature.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <!--<script src="/js/libs/tonal.min.js"></script>-->
@@ -36,15 +38,20 @@
                 <input type="range" id="tempo__range" min="50" max="190" step="1" value="120">
             </div>
             <select id="currentMidi" onchange="currentSong()">
-                <option value="0" selected>Bulería</option>
-                <option value="1">Bumblebee</option>
-                <option value="2">Sorpresa</option>
-
+                <option value="buleria_01" selected>Bulería 1</option>
+                <option value="buleria_03">Bulería 2</option>
+                <option value="bulerias_5">Bulería 3</option>
+                <option value="bulerias_cadiz_09_v2">Bulería de Cádiz</option>
+                <option value="cierre_04">Cierre</option>
+                <option value="Tangos_02">Tangos</option>
+                <option value="rumbas_06">Rumbas 1</option>
+                <option value="rumba_7">Rumbas 2</option>
+                <option value="guajiras_08">Guajiras</option>
             </select>
         </div>
 
 <div id="container-id"></div>
-      <div class="well">
+      <div class="well" id="tab_div">
           <div id="mySVGDiv"></div>
       </div>
       <div class="well">

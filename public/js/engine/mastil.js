@@ -1,6 +1,6 @@
 
 
-let tab_notes = MidiConvert.load("midis/bulerias_cadiz_09_v2.mid")
+let tab_notes = MidiConvert.load("midis/buleria_01.mid")
 let midi_test = MidiConvert.load("midis/Django.mid")
 console.log(midi_test)
 const frets = {
@@ -192,7 +192,19 @@ function fretboard_draw(event, last){
 }
 function clean_fretboard (){
 
+
 }
+function remove_tab() {
+
+    var tab_div = document.getElementById('tab_div');
+    var tab = document.getElementById('mySVGDiv')
+    tab.parentNode.removeChild(tab);
+    var iDiv = document.createElement('div');
+    iDiv.id = 'mySVGDiv';
+    tab_div.appendChild(iDiv);
+
+}
+
 function draw_current_note(index) {
     let current = document.getElementsByTagName('text')[index];
     let last = document.getElementsByTagName('text')[index -1];
@@ -243,20 +255,27 @@ function currentSong(){
     let currentMidi= [];
     let selects = document.getElementById("currentMidi");
     let selectedValue = selects.options[selects.selectedIndex].value;
-    MidiConvert.load("midis/" + currentMidi[selectedValue]).then(function(midi) {
+    console.log(selectedValue)
+    remove_tab()
+    MidiConvert.load("midis/" + selectedValue + ".mid").then(function(midi) {
 
-        console.log(midi.tracks[0].name);
+      /*  console.log(midi.tracks[0].name);
         let melody = midi.get(midi.tracks[0].name).notes;
         console.log(melody);
         // make sure you set the tempo before you schedule the events
         Tone.Transport.bpm.value = midi.bpm;
         Tone.Transport.timeSignature = midi.timeSignature;
-        let currentPicado = new Tone.Part(playNote, melody).start(0);
+        let currentPicado = new Tone.Part(playNote, melody).start(0);*/
+
+        launcher(midi)
 
     });
 }
 tab_notes.then(function(midi) {
 
+launcher(midi)
+})
+function launcher(midi){
     let notes = ["E","A","D","G","B","e"]
     Tone.Transport.bpm.value = midi.bpm;
     Tone.Transport.timeSignature = midi.timeSignature;
@@ -289,7 +308,7 @@ tab_notes.then(function(midi) {
     fret_to_miditrack(midi);
     tab_parser(midi);
     create_tab(midi);
-})
+}
 function create_tab(midi) {
     const string_values= {
         'e': 1,
@@ -299,6 +318,7 @@ function create_tab(midi) {
         'A': 5,
         'E': 6,
     }
+
     VF = Vex.Flow;
 
     let div = document.getElementById("mySVGDiv")
@@ -351,10 +371,18 @@ function create_tab(midi) {
                     )
                     firstNote = true
                 }
-
             }
-
             lastNote = sort_notes_arr[i] }
+    function compare(a,b) {
+        if (a.str < b.str)
+            return -1;
+        if (a.str > b.str)
+            return 1;
+        return 0;
+    }
+    duplicate_notes.forEach((note) => {
+        note[0].sort(compare);
+    })
 
     for (let i = 0 ; i <= sort_notes_arr.length -1; ++i) {
 
@@ -376,12 +404,11 @@ function create_tab(midi) {
                                 }
 
                             ],
-                            duration: sort_notes_arr[i].music_duration,
-                            time: sort_notes_arr[i].time,
+                            duration: duplicate_notes[i][1].duration,
+                            time: duplicate_notes[i][1].time,
                         })
 
                     )
-                   /* i += 1*/
 
 
                 }
@@ -406,12 +433,11 @@ function create_tab(midi) {
 
 
                             ],
-                            duration: sort_notes_arr[i].music_duration,
-                            time: sort_notes_arr[i].time,
+                            duration: duplicate_notes[i][1].duration,
+                            time: duplicate_notes[i][1].time,
                         })
 
                     )
-                   /* i += 2*/
 
                 }
                 if (duplicate_notes[i][0].length=== 4){
@@ -436,19 +462,18 @@ function create_tab(midi) {
                                     str: duplicate_notes[i][0][3]['str'],
                                     fret: duplicate_notes[i][0][3]['fret']
                                 }
-
-
                             ],
-                            duration: sort_notes_arr[i].music_duration,
-                            time: sort_notes_arr[i].time,
+                            duration: duplicate_notes[i][1].duration,
+                            time: duplicate_notes[i][1].time,
                         })
 
                     )
-                  /*  i += 3*/
+
 
                 }
 
-
+               /* draw_notes.splice(i -1,1)
+                i += 1*/
             }
 
         else {
@@ -467,7 +492,6 @@ function create_tab(midi) {
 
                 )
             }
-
 
     console.log(i)
     }
