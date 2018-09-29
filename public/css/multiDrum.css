@@ -27,16 +27,6 @@ nav {
 }
 
 .transport,
-.controls {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    background: #a6a6a6;
-    padding: 7px 0 7px 20px;
-    border-bottom: 1px solid #7f7f7f;
-}
 
 .bpm {
     display: flex;

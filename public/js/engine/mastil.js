@@ -246,23 +246,31 @@ function playNote(time, event) {
     )
 
 }
+const checkbox = document.querySelector("input[name=play]");
 let button = document.getElementById("play");
-button.addEventListener("click ", function() {
-    if (Tone.Transport.state === "started") {
-        Tone.Transport.stop();
-    } else {
-        Tone.Transport.start("+0.1 ", 0);
+button.addEventListener('click', function() {
+    console.log("pushed")
+    function start(){
+        if (Tone.Transport.state === "started") {
+            Tone.Transport.stop();
+        } else {
+            Tone.Transport.start("+0.1 ", 0);
+        }
     }
+    start()
+
+
 });
-//cambia el midi segun lo que se escoja en el select
+
 function currentSong(){
-    let currentMidi= [];
     let selects = document.getElementById("currentMidi");
     let selectedValue = selects.options[selects.selectedIndex].value;
     console.log(selectedValue)
     clean_fretboard ()
     remove_tab()
     MidiConvert.load("midis/" + selectedValue + ".mid").then(function(midi) {
+        Tone.Transport.stop();
+        Tone.Transport.start("+0.1 ", 0);
         launcher(midi)
     });
 }
