@@ -1,8 +1,7 @@
 
 
 let tab_notes = MidiConvert.load("midis/buleria_01.mid")
-let midi_test = MidiConvert.load("midis/Django.mid")
-console.log(midi_test)
+
 const frets = {
     E: {
         'E3': "6_0",
@@ -191,7 +190,13 @@ function fretboard_draw(event, last){
     })
 }
 function clean_fretboard (){
-
+    for (i=1; i<=6;i++ ){
+        for (e = 0; e<=12; e++ ){
+            let fretSelected = i + "_" + e ;
+            let unselected_fret = `images/normal/` + fretSelected + `.png`;
+            document.getElementById(fretSelected).src = unselected_fret;
+        }
+    }
 
 }
 function remove_tab() {
@@ -204,7 +209,6 @@ function remove_tab() {
     tab_div.appendChild(iDiv);
 
 }
-
 function draw_current_note(index) {
     let current = document.getElementsByTagName('text')[index];
     let last = document.getElementsByTagName('text')[index -1];
@@ -256,19 +260,10 @@ function currentSong(){
     let selects = document.getElementById("currentMidi");
     let selectedValue = selects.options[selects.selectedIndex].value;
     console.log(selectedValue)
+    clean_fretboard ()
     remove_tab()
     MidiConvert.load("midis/" + selectedValue + ".mid").then(function(midi) {
-
-      /*  console.log(midi.tracks[0].name);
-        let melody = midi.get(midi.tracks[0].name).notes;
-        console.log(melody);
-        // make sure you set the tempo before you schedule the events
-        Tone.Transport.bpm.value = midi.bpm;
-        Tone.Transport.timeSignature = midi.timeSignature;
-        let currentPicado = new Tone.Part(playNote, melody).start(0);*/
-
         launcher(midi)
-
     });
 }
 tab_notes.then(function(midi) {
