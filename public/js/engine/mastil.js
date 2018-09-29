@@ -272,6 +272,7 @@ launcher(midi)
 })
 function launcher(midi){
     let notes = ["E","A","D","G","B","e"]
+    Tone.Transport.cancel()
     Tone.Transport.bpm.value = midi.bpm;
     Tone.Transport.timeSignature = midi.timeSignature;
     Tone.Transport.loop =true;
